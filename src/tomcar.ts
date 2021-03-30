@@ -3,7 +3,7 @@ import Fertari from "./tom/fertari";
 import GAWorkFlow from "./workflow";
 import GetTomCar from "./factory"
 
-function TomCarStart(workflow:WorkFlow): void{
+export function TomCarStart(workflow:WorkFlow): void{
 
     workflow.Init();
     workflow.Start();
@@ -19,7 +19,7 @@ function TomCarStart(workflow:WorkFlow): void{
 
 }
 
-function GetGAWorkFlow(canvas:HTMLCanvasElement,n:number,locationX:number,locationY:number,velocityX:number,velocityY:number): WorkFlow{
+export function GetGAWorkFlow(canvas:HTMLCanvasElement,n:number,locationX:number,locationY:number,velocityX:number,velocityY:number): WorkFlow{
     var prototypeCar:Fertari = GetTomCar(locationX,locationY,velocityX,velocityY).car;
     var cars:Fertari[] = new Array(n);
     for (var i=0 ; i < n; i++) {

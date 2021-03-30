@@ -1,8 +1,14 @@
 {
     "compilerOptions": {
+        "module":"amd",
         "lib": ["ES6","dom"],
         "target": "es6",
-        "outDir": "./js",
-    }
-
+        //"outDir": "./js",
+        "allowJs": true,
+        "outFile":"./js/tomcar.js",
+        "sourceMap": true,
+    },
+    "files":[
+        "./tomcar.ts",
+    ]
 }

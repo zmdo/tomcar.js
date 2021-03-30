@@ -1,11 +1,13 @@
 <html>
     <head>
         <title>Tomcar Example</title>
-        <script src="js/tomcar.js"></script>
+
+        <style media="screen">
+            body {background:black; text-align:center}
+            #mainCanvas {background:white}
+           </style>
 
         <script>
-
-            // import {GetGAWorkFlow,TomCarStart} from "js/tomcar";
 
             window.onload=function () {
              let oV=document.getElementById('mainCanvas');
@@ -44,7 +46,6 @@
             }
 
             function tomcar_run() {
-                alert(GetGAWorkFlow);
                 var workflow = GetGAWorkFlow(oV,10,100,100,10,0);
                 TomCarStart(workflow);
             }
@@ -53,9 +54,10 @@
     </head>
     <body>
         <div id = "tomcar">
+            <script src="js/tomcar.js"></script>
             <input type="color" id="color1" /><br/>
             <canvas id="mainCanvas" width="500" height="500"></canvas>
         </div>
-        <button onclick="tomcar_run()" ></button>
+        <button onclick="tomcar_run()">Start</button>
     </body>
 </html>
