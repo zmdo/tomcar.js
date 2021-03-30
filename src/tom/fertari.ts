@@ -5,6 +5,7 @@ import RigidBody from "../physis/rigid_body";
 
 export default class Fertari extends Car implements Drawable,RigidBody{
 
+    // collision volume
     private radius:number;
 
     constructor(driver:Driver,radius:number,x:number,y:number,vx:number,vy:number,radian:number) {
