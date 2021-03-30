@@ -1,7 +1,6 @@
-import Environment from "./core/env";
 import TomBrain from "./tom/brain";
 import Fertari from "./tom/fertari";
-import Radar, { DEFAULT_RADAR_INSTANCE } from "./tom/radar";
+import { DEFAULT_RADAR_INSTANCE } from "./tom/radar";
 import Tom from "./tom/tom";
 
 export default function GetTomCar(locationX:number,locationY:number,velocityX:number,velocityY:number):{car:Fertari,driver:Tom,brain:TomBrain} {
