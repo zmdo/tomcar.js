@@ -18,22 +18,24 @@ import Sensor from "./sensor";
  */
 export default class Car {
 
-    id:number;
-    driver:Driver;
-    environment:Environment;
+    id:number = 0;
+    driver!: Driver;
+    environment!: Environment;
     mileage:number;
-    locationX:number;
-    locationY:number;
-    velocityY:number;
-    velocityX:number;
-    velocity:number;
+    locationX!:number;
+    locationY!:number;
+    velocityY!:number;
+    velocityX!:number;
+    velocity !:number;
     turnRadian:number;
     sensors:Map<string,Sensor>;
-    alive:boolean;
-    private recordCar:Car;
+    alive:boolean = false;
+    private recordCar!: Car;
 
-    constructor(driver:Driver,x:number,y:number,vx:number,vy:number,radian:number) {
-        this.SetDriver(driver);
+    constructor(driver:Driver | null,x:number,y:number,vx:number,vy:number,radian:number) {
+        if(driver != null) {
+            this.SetDriver(driver);
+        }
         this.SetLocation(x,y);
         this.SetVelocity(vx,vy);
         this.turnRadian = radian;

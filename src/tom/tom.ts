@@ -7,7 +7,7 @@ export default class Tom extends Driver {
 
     public static DEPENDENT_SENSORS:string[] = [Radar.SENSOR_NAME];
 
-    brain:TomBrain;
+    brain!:TomBrain;
 
     constructor(brain:TomBrain){
         super(brain);

@@ -52,7 +52,7 @@ export abstract class SensorBase implements Sensor {
 			cos = Math.cos(angle);
 			
 			// ger scan line 
-			var lineBlocks:number[]; 			
+			var lineBlocks:number[] = new Array(this.detectionRange); 			
 			for (var len:number = 0 ; len < this.detectionRange ; len ++) { 
                 
 				var i:number = Math.floor(len*cos);

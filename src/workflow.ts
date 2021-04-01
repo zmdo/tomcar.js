@@ -12,7 +12,7 @@ export default class GAWorkFlow implements WorkFlow {
     public static LAND:string = Radar.DETECTABLE_RESOURCE_NAME;
 
     cars:Fertari[];
-    environment:Environment
+    environment!:Environment;
     dt:number = 0.1;
     canvas:HTMLCanvasElement;
     prototypeCar:Fertari;
@@ -26,17 +26,19 @@ export default class GAWorkFlow implements WorkFlow {
     public Init(): void {
 
         // scan canvas
-        var c2d:CanvasRenderingContext2D = this.canvas.getContext("2d");
+        var c2d:CanvasRenderingContext2D|null = this.canvas.getContext("2d");
+        if (c2d == null) return ;
+        
         var width = this.canvas.width;
         var height = this.canvas.height;
 
         var data:number[] = new Array(width*height);
-        var canvasData =  c2d.getImageData(0,0,width,height);
+        var canvasData:ImageData =  c2d.getImageData(0,0,width,height);
         var pos:number;
         for (var i:number = 0; i < width ; i ++) {
             for (var j:number = 0 ; j < height; j ++) {
                 pos = j*width + i;
-                if(canvasData[pos] < 255){
+                if(canvasData.data[pos] < 255){
                     data[pos] = 1;
                 } else {
                     data[pos] = 0;
@@ -95,17 +97,19 @@ export default class GAWorkFlow implements WorkFlow {
 
     private Draw(): void {
 
+        var c2d:CanvasRenderingContext2D|null = this.canvas.getContext("2d");
+        if (c2d == null) return ;
+
         var width:number = this.environment.width;
         var height:number = this.environment.height;
-        var c2d:CanvasRenderingContext2D = this.canvas.getContext("2d");
 
         // clear all 
         c2d.clearRect(0,0,width,height);
 
         // draw background
         var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
-        for(var i:number; i < width ; i++ ) {
-            for(var j:number; j < height ; j++ ) {
+        for(var i:number = 0; i < width ; i++ ) {
+            for(var j:number = 0; j < height ; j++ ) {
                 if(lands[j*width + i ] > 0) {
                     c2d.fillRect(i,j,1,1);
                 }

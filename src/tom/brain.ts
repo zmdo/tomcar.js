@@ -6,12 +6,12 @@ import Radar from "./radar";
 
 export default class TomBrain implements Gene,Brain {
 
-    net:NeuralNetwork;
+    net!: NeuralNetwork;
     mutatedRate:number = 0.2;
     chiasmaRate:number = 0.5;
 
     private inputData:Map<string,number[]> = new Map();
-    private tempOutput:number[];
+    private tempOutput:number[] = new Array();
 
     /**
      * Randomly generate network data.

@@ -5,7 +5,7 @@ import Brain from "./brain"
  * driver
  */
 export default abstract class Driver {
-    car:Car;
+    car!: Car;
     brain:Brain;
 
     constructor(brain:Brain) {

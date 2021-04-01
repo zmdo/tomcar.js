@@ -24,7 +24,7 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
 
     public Input(data:number[]): number[]{
 
-        var output:number[];
+        var output:number[] = new Array();
         var input:number[] = data;
 
         for(var i:number = 0 ; i < this.NumberOfLayers() ; i ++) {
