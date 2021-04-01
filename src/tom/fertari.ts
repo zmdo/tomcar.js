@@ -33,7 +33,9 @@ export default class Fertari extends Car implements Drawable,RigidBody{
     public Draw(canvas: HTMLCanvasElement): void {
         var c2d:CanvasRenderingContext2D|null = canvas.getContext("2d");
         if (c2d != null) {
-            c2d.arc(this.GetX(), this.GetY(), this.GetRadius() , 0, 360, true);
+            // alert(this.GetRadius());
+            c2d.fillRect(this.GetX(), this.GetY(), this.GetRadius(),this.GetRadius());
+            // c2d.arc(this.GetX(), this.GetY(), this.GetRadius() , 0, 180, true);
         }
     }
 

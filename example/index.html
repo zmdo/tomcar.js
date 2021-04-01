@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Tomcar Example</title>
+        <script src="../target/require.js" defer async="true" data-main="../target/tomcar"></script>
         <script src="../target/tomcar.js"></script>
 
         <script>
@@ -44,10 +45,14 @@
             }
 
             function tomcar_run() {
-                alert(GetGAWorkFlow);
-                var workflow = GetGAWorkFlow(oV,10,100,100,10,0);
-                TomCarStart(workflow);
+                require(['tomcar','factory'],function(tomcar,factory){
+                    var oV=document.getElementById('mainCanvas');
+                    var workflow = factory.GetGAWorkFlow(oV,10,100,100,10,0);
+                    tomcar.TomCarStart(workflow);
+                });
+
             }
+
            </script>
 
     </head>

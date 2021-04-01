@@ -84,11 +84,11 @@ export default class GAWorkFlow implements WorkFlow {
         });
 
         // rule
-        this.cars.forEach(car => {
-            if(this.environment.GetResource(GAWorkFlow.LAND,car.locationX,car.locationY) > 0) {
-                car.alive = false;
-            }
-        });
+        // this.cars.forEach(car => {
+        //     if(this.environment.GetResource(GAWorkFlow.LAND,car.locationX,car.locationY) > 0) {
+        //         car.alive = false;
+        //     }
+        // });
 
         // draw
         this.Draw();
@@ -107,14 +107,14 @@ export default class GAWorkFlow implements WorkFlow {
         c2d.clearRect(0,0,width,height);
 
         // draw background
-        var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
-        for(var i:number = 0; i < width ; i++ ) {
-            for(var j:number = 0; j < height ; j++ ) {
-                if(lands[j*width + i ] > 0) {
-                    c2d.fillRect(i,j,1,1);
-                }
-            }
-        }
+        // var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
+        // for(var i:number = 0; i < width ; i++ ) {
+        //     for(var j:number = 0; j < height ; j++ ) {
+        //         if(lands[j*width + i ] > 0) {
+        //             c2d.fillRect(i,j,1,1);
+        //         }
+        //     }
+        // }
 
         // draw cars
         this.cars.forEach(car => {
@@ -124,12 +124,14 @@ export default class GAWorkFlow implements WorkFlow {
     }
 
     public IsEnd(): boolean {
+        var flag:boolean = true
         this.cars.forEach(car => {
             if (car.IsAlive()) {
-                return false;
+                flag = false;
+                return ;
             }
         });
-        return true;
+        return flag;
     }
 
     public OrderdCars(): Car[] {

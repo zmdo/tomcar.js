@@ -21,9 +21,9 @@ export default interface Sensor {
 
 export abstract class SensorBase implements Sensor {
 
-    visualField:number = 10;
-    scanLine:number = 120;
-    detectionRange:number = 2*Math.PI/2;
+    visualField:number ;
+    scanLine:number ;
+    detectionRange:number ;
     
     constructor(visualField:number,scanLine:number,detectionRange:number) {
         this.visualField = visualField;
@@ -58,7 +58,7 @@ export abstract class SensorBase implements Sensor {
 				var i:number = Math.floor(len*cos);
 				var j:number = Math.floor(len*sin);
 				
-				lineBlocks[len] = SensorBase.GetBlock(resources,width,height,x,y);
+				lineBlocks[len] = SensorBase.GetBlock(resources,width,height,i,j);
 				
 			}
 

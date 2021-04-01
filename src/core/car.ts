@@ -29,7 +29,7 @@ export default class Car {
     velocity !:number;
     turnRadian:number;
     sensors:Map<string,Sensor>;
-    alive:boolean = false;
+    alive!:boolean;
     private recordCar!: Car;
 
     constructor(driver:Driver | null,x:number,y:number,vx:number,vy:number,radian:number) {
@@ -41,6 +41,7 @@ export default class Car {
         this.turnRadian = radian;
         this.sensors = new Map();
         this.mileage = 0;
+        this.alive=true;
     }
 
     /**

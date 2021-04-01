@@ -24,4 +24,4 @@ export default class Radar extends SensorBase {
 
 }
 
-export let DEFAULT_RADAR_INSTANCE:Radar = new Radar(10,120,2*Math.PI/3);
+export let DEFAULT_RADAR_INSTANCE:Radar = new Radar(2*Math.PI/3.0,120,120);

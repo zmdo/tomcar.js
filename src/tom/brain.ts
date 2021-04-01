@@ -31,7 +31,7 @@ export default class TomBrain implements Gene,Brain {
         powers = new Array(layers.length);
         bias = new Array(layers.length);
 
-        for(var i:number = 1; i < layers.length ; i++ ) {
+        for(var i:number = 0; i < layers.length ; i++ ) {
             powers[i] = new Array(layers[i]);
             bias[i] = new Array(layers[i]);
             
