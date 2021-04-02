@@ -27,23 +27,24 @@ export default class TomBrain implements Gene,Brain {
 
         var powers : number[][][];
         var bias : number[][];
+        var t:number;
 
-        powers = new Array(layers.length);
-        bias = new Array(layers.length);
+        powers = new Array(layers.length-1);
+        bias = new Array(layers.length-1);
 
-        for(var i:number = 0; i < layers.length ; i++ ) {
-            powers[i] = new Array(layers[i]);
-            bias[i] = new Array(layers[i]);
+        for(var i:number = 1; i < layers.length ; i++ ) {
+            t = i-1;
+            powers[t] = new Array(layers[i]);
+            bias[t] = new Array(layers[i]);
             
             for (var j:number = 0 ; j < layers[i]; j ++ ) {
-                powers[i][j] = new Array(layers[i - 1]);
-                bias[i][j] = Math.random();
+                powers[t][j] = new Array(layers[i - 1]);
+                bias[t][j] = Math.random();
                 for (var k:number = 0 ; k < layers[i - 1] ; k ++) {
-                    powers[i][j][k] = Math.random();
+                    powers[t][j][k] = Math.random();
                 }
             }
         }
-
         this.net = new DefaultNeuralNetwork(powers,bias);
     }
 

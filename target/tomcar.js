@@ -343,7 +343,8 @@ define("tom/nn_cpu", ["require", "exports"], function (require, exports) {
             return this.powers.length;
         }
         Input(data) {
-            var output = new Array();
+            alert(data);
+            var output;
             var input = data;
             for (var i = 0; i < this.NumberOfLayers(); i++) {
                 var layer = this.GetLayer(i);
@@ -398,7 +399,7 @@ define("tom/radar", ["require", "exports", "core/sensor"], function (require, ex
     exports.default = Radar;
     Radar.SENSOR_NAME = "radar";
     Radar.DETECTABLE_RESOURCE_NAME = "land";
-    exports.DEFAULT_RADAR_INSTANCE = new Radar(2 * Math.PI / 3.0, 120, 120);
+    exports.DEFAULT_RADAR_INSTANCE = new Radar(2 * Math.PI / 3.0, 12, 50);
 });
 define("tom/brain", ["require", "exports", "tom/nn_cpu", "tom/radar"], function (require, exports, nn_cpu_1, radar_1) {
     "use strict";
@@ -423,16 +424,18 @@ define("tom/brain", ["require", "exports", "tom/nn_cpu", "tom/radar"], function 
         InitBrain(...layers) {
             var powers;
             var bias;
-            powers = new Array(layers.length);
-            bias = new Array(layers.length);
-            for (var i = 0; i < layers.length; i++) {
-                powers[i] = new Array(layers[i]);
-                bias[i] = new Array(layers[i]);
+            var t;
+            powers = new Array(layers.length - 1);
+            bias = new Array(layers.length - 1);
+            for (var i = 1; i < layers.length; i++) {
+                t = i - 1;
+                powers[t] = new Array(layers[i]);
+                bias[t] = new Array(layers[i]);
                 for (var j = 0; j < layers[i]; j++) {
-                    powers[i][j] = new Array(layers[i - 1]);
-                    bias[i][j] = Math.random();
+                    powers[t][j] = new Array(layers[i - 1]);
+                    bias[t][j] = Math.random();
                     for (var k = 0; k < layers[i - 1]; k++) {
-                        powers[i][j][k] = Math.random();
+                        powers[t][j][k] = Math.random();
                     }
                 }
             }
@@ -640,12 +643,12 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             var pos;
             for (var i = 0; i < width; i++) {
                 for (var j = 0; j < height; j++) {
-                    pos = j * width + i;
-                    if (canvasData.data[pos] < 255) {
-                        data[pos] = 1;
+                    pos = j * width * 4 + i * 4;
+                    if (canvasData.data[pos] > 0) {
+                        data[j * width + i] = 1;
                     }
                     else {
-                        data[pos] = 0;
+                        data[j * width + i] = 0;
                     }
                 }
             }
@@ -680,11 +683,11 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
                 }
             });
             // rule
-            // this.cars.forEach(car => {
-            //     if(this.environment.GetResource(GAWorkFlow.LAND,car.locationX,car.locationY) > 0) {
-            //         car.alive = false;
-            //     }
-            // });
+            this.cars.forEach(car => {
+                if (this.environment.GetResource(GAWorkFlow.LAND, car.locationX, car.locationY) > 0) {
+                    car.alive = false;
+                }
+            });
             // draw
             this.Draw();
         }
@@ -697,14 +700,14 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             // clear all 
             c2d.clearRect(0, 0, width, height);
             // draw background
-            // var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
-            // for(var i:number = 0; i < width ; i++ ) {
-            //     for(var j:number = 0; j < height ; j++ ) {
-            //         if(lands[j*width + i ] > 0) {
-            //             c2d.fillRect(i,j,1,1);
-            //         }
-            //     }
-            // }
+            var lands = this.environment.GetAllResources(GAWorkFlow.LAND);
+            for (var i = 0; i < width; i++) {
+                for (var j = 0; j < height; j++) {
+                    if (lands[j * width + i] > 0) {
+                        c2d.fillRect(i, j, 1, 1);
+                    }
+                }
+            }
             // draw cars
             this.cars.forEach(car => {
                 car.Draw(this.canvas);
@@ -778,7 +781,7 @@ define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar"
     function GetTomCar(locationX, locationY, velocityX, velocityY) {
         // init brain
         var tomBrain = new brain_1.default();
-        tomBrain.InitBrain(radar_4.DEFAULT_RADAR_INSTANCE.scanLine, 10, 10, 3);
+        tomBrain.InitBrain(radar_4.DEFAULT_RADAR_INSTANCE.scanLine, 10, 3);
         // init driver
         var tomDriver = new tom_2.default(tomBrain);
         // init car

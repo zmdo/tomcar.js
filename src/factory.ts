@@ -9,7 +9,7 @@ export default function GetTomCar(locationX:number,locationY:number,velocityX:nu
 
     // init brain
     var tomBrain:TomBrain = new TomBrain();
-    tomBrain.InitBrain(DEFAULT_RADAR_INSTANCE.scanLine,10,10,3);
+    tomBrain.InitBrain(DEFAULT_RADAR_INSTANCE.scanLine,10,3);
 
     // init driver
     var tomDriver:Tom = new Tom(tomBrain);

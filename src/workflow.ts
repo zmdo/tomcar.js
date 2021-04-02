@@ -35,13 +35,14 @@ export default class GAWorkFlow implements WorkFlow {
         var data:number[] = new Array(width*height);
         var canvasData:ImageData =  c2d.getImageData(0,0,width,height);
         var pos:number;
+
         for (var i:number = 0; i < width ; i ++) {
             for (var j:number = 0 ; j < height; j ++) {
-                pos = j*width + i;
-                if(canvasData.data[pos] < 255){
-                    data[pos] = 1;
+                pos = j*width*4 + i*4;
+                if(canvasData.data[pos] > 0){
+                    data[j*width + i ] = 1;
                 } else {
-                    data[pos] = 0;
+                    data[j*width + i ] = 0;
                 }
             }
         }
@@ -84,11 +85,11 @@ export default class GAWorkFlow implements WorkFlow {
         });
 
         // rule
-        // this.cars.forEach(car => {
-        //     if(this.environment.GetResource(GAWorkFlow.LAND,car.locationX,car.locationY) > 0) {
-        //         car.alive = false;
-        //     }
-        // });
+        this.cars.forEach(car => {
+            if(this.environment.GetResource(GAWorkFlow.LAND,car.locationX,car.locationY) > 0) {
+                car.alive = false;
+            }
+        });
 
         // draw
         this.Draw();
@@ -107,14 +108,14 @@ export default class GAWorkFlow implements WorkFlow {
         c2d.clearRect(0,0,width,height);
 
         // draw background
-        // var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
-        // for(var i:number = 0; i < width ; i++ ) {
-        //     for(var j:number = 0; j < height ; j++ ) {
-        //         if(lands[j*width + i ] > 0) {
-        //             c2d.fillRect(i,j,1,1);
-        //         }
-        //     }
-        // }
+        var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
+        for(var i:number = 0; i < width ; i++ ) {
+            for(var j:number = 0; j < height ; j++ ) {
+                if(lands[j*width + i ] > 0) {
+                    c2d.fillRect(i,j,1,1);
+                }
+            }
+        }
 
         // draw cars
         this.cars.forEach(car => {

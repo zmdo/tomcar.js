@@ -23,8 +23,7 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
     }
 
     public Input(data:number[]): number[]{
-
-        var output:number[] = new Array();
+        var output!:number[];
         var input:number[] = data;
 
         for(var i:number = 0 ; i < this.NumberOfLayers() ; i ++) {
@@ -39,7 +38,6 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
             }
             input = output;
         }
-        
         return output;
     }
     
