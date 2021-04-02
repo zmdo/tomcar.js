@@ -144,17 +144,15 @@ define("core/sensor", ["require", "exports"], function (require, exports) {
                 // ger scan line 
                 var lineBlocks = new Array(this.detectionRange);
                 for (var len = 0; len < this.detectionRange; len++) {
-                    var i = Math.floor(len * cos);
-                    var j = Math.floor(len * sin);
-                    lineBlocks[len] = SensorBase.GetBlock(resources, width, height, i, j);
+                    var i = len * cos;
+                    var j = len * sin;
+                    var pos = Math.floor((j + y) * width + (i + x));
+                    lineBlocks[len] = resources[pos];
                 }
                 result[index] = this.LineScan(lineBlocks);
                 angle += dAngle;
             }
             return result;
-        }
-        static GetBlock(resources, width, height, x, y) {
-            return resources[y * width + x];
         }
     }
     exports.SensorBase = SensorBase;
@@ -177,14 +175,14 @@ define("core/car", ["require", "exports"], function (require, exports) {
      *
      */
     class Car {
-        constructor(driver, x, y, vx, vy, radian) {
+        constructor(driver, x, y, vx, vy, turnRadian) {
             this.id = 0;
             if (driver != null) {
                 this.SetDriver(driver);
             }
             this.SetLocation(x, y);
             this.SetVelocity(vx, vy);
-            this.turnRadian = radian;
+            this.turnRadian = turnRadian;
             this.sensors = new Map();
             this.mileage = 0;
             this.alive = true;
@@ -194,21 +192,30 @@ define("core/car", ["require", "exports"], function (require, exports) {
          * @param dt interval time
          */
         Run(dt) {
+            switch (this.turn) {
+                case 1:
+                    this.Turn(-this.turnRadian * dt);
+                    break;
+                case 2:
+                    this.Turn(this.turnRadian * dt);
+                    break;
+            }
             this.locationX += this.velocityX * dt;
             this.locationY += this.velocityY * dt;
-            this.mileage = 0;
+            this.mileage += 1;
+            this.turn = 0;
         }
         /**
          * The car will turn right from the current direction
          */
         TurnRight() {
-            this.Turn(-this.turnRadian);
+            this.turn = 1;
         }
         /**
          * The car will turn left from the current direction
          */
         TurnLeft() {
-            this.Turn(-this.turnRadian);
+            this.turn = 2;
         }
         Turn(dRadian) {
             // get new direction
@@ -343,7 +350,6 @@ define("tom/nn_cpu", ["require", "exports"], function (require, exports) {
             return this.powers.length;
         }
         Input(data) {
-            alert(data);
             var output;
             var input = data;
             for (var i = 0; i < this.NumberOfLayers(); i++) {
@@ -354,7 +360,7 @@ define("tom/nn_cpu", ["require", "exports"], function (require, exports) {
                     for (var k = 0; k < layer.power[j].length; k++) {
                         output[j] += layer.power[j][k] * input[k];
                     }
-                    output[j] = this.ActivationFunction(output[j], layer.bias[j]);
+                    output[j] = this.ActivationFunction(layer.power[j].length, output[j], layer.bias[j]);
                 }
                 input = output;
             }
@@ -370,8 +376,8 @@ define("tom/nn_cpu", ["require", "exports"], function (require, exports) {
             super(powers, bias);
         }
         // sigmoid
-        ActivationFunction(sum, bias) {
-            return 1.0 / (1.0 + Math.exp(-(sum + bias)));
+        ActivationFunction(len, sum, bias) {
+            return 1.0 / (1.0 + Math.exp(-(sum / len + bias)));
         }
     }
     exports.DefaultNeuralNetwork = DefaultNeuralNetwork;
@@ -551,9 +557,9 @@ define("tom/fertari", ["require", "exports", "core/car"], function (require, exp
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Fertari extends car_1.default {
-        constructor(driver, radius, x, y, vx, vy, radian) {
-            super(driver, x, y, vx, vy, radian);
-            this.radius = radian;
+        constructor(driver, radius, x, y, vx, vy, turnRadian) {
+            super(driver, x, y, vx, vy, turnRadian);
+            this.radius = radius;
         }
         GetRadius() {
             return this.radius;
@@ -571,9 +577,7 @@ define("tom/fertari", ["require", "exports", "core/car"], function (require, exp
         Draw(canvas) {
             var c2d = canvas.getContext("2d");
             if (c2d != null) {
-                // alert(this.GetRadius());
                 c2d.fillRect(this.GetX(), this.GetY(), this.GetRadius(), this.GetRadius());
-                // c2d.arc(this.GetX(), this.GetY(), this.GetRadius() , 0, 180, true);
             }
         }
     }
@@ -684,7 +688,9 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             });
             // rule
             this.cars.forEach(car => {
-                if (this.environment.GetResource(GAWorkFlow.LAND, car.locationX, car.locationY) > 0) {
+                var x = Math.floor(car.locationX);
+                var y = Math.floor(car.locationY);
+                if (this.environment.GetResource(GAWorkFlow.LAND, x, y) > 0) {
                     car.alive = false;
                 }
             });
@@ -785,7 +791,7 @@ define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar"
         // init driver
         var tomDriver = new tom_2.default(tomBrain);
         // init car
-        var tomCar = new fertari_1.default(tomDriver, 10, locationX, locationY, velocityX, velocityY, 10);
+        var tomCar = new fertari_1.default(tomDriver, 5, locationX, locationY, velocityX, velocityY, Math.PI / 6);
         tomCar.SetSensorUseDefaultName(radar_4.DEFAULT_RADAR_INSTANCE);
         return {
             car: tomCar,

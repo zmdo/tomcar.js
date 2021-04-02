@@ -31,14 +31,15 @@ export default class Car {
     sensors:Map<string,Sensor>;
     alive!:boolean;
     private recordCar!: Car;
+    private turn!:number;
 
-    constructor(driver:Driver | null,x:number,y:number,vx:number,vy:number,radian:number) {
+    constructor(driver:Driver | null,x:number,y:number,vx:number,vy:number,turnRadian:number) {
         if(driver != null) {
             this.SetDriver(driver);
         }
         this.SetLocation(x,y);
         this.SetVelocity(vx,vy);
-        this.turnRadian = radian;
+        this.turnRadian = turnRadian;
         this.sensors = new Map();
         this.mileage = 0;
         this.alive=true;
@@ -49,23 +50,28 @@ export default class Car {
      * @param dt interval time
      */
     public Run(dt:number): void{
+        switch(this.turn) {
+            case 1:this.Turn(-this.turnRadian*dt);break;
+            case 2:this.Turn(this.turnRadian*dt);break;
+        }
         this.locationX += this.velocityX*dt;
         this.locationY += this.velocityY*dt;
-        this.mileage = 0;
+        this.mileage += 1;
+        this.turn = 0;
     }
 
     /**
      * The car will turn right from the current direction
      */
     public TurnRight(): void{
-        this.Turn(-this.turnRadian);
+        this.turn = 1;
     }
 
     /**
      * The car will turn left from the current direction
      */
     public TurnLeft(): void{
-        this.Turn(-this.turnRadian);
+        this.turn = 2;
     }
 
     private Turn(dRadian:number): void{

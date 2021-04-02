@@ -36,7 +36,8 @@ export abstract class SensorBase implements Sensor {
     public Scan(env: Environment, x: number, y: number, direction: number): number[] {
         
         // get resources
-        var resources =env.GetAllResources(this.GetDetectableResourceName());
+        var resources = env.GetAllResources(this.GetDetectableResourceName());
+
         var width = env.width;
         var height = env.height;
 
@@ -55,17 +56,18 @@ export abstract class SensorBase implements Sensor {
 			var lineBlocks:number[] = new Array(this.detectionRange); 			
 			for (var len:number = 0 ; len < this.detectionRange ; len ++) { 
                 
-				var i:number = Math.floor(len*cos);
-				var j:number = Math.floor(len*sin);
-				
-				lineBlocks[len] = SensorBase.GetBlock(resources,width,height,i,j);
+				var i:number = len*cos;
+				var j:number = len*sin;
+                var pos:number = Math.floor((j+y)*width + (i+x))
+
+				lineBlocks[len] = resources[pos];
 				
 			}
 
             result[index] = this.LineScan(lineBlocks);
 			angle += dAngle;
 		}
-		
+        
 		return result;
     }
 
@@ -73,7 +75,4 @@ export abstract class SensorBase implements Sensor {
 
     protected abstract LineScan(lineBlocks:number[]): number;
     
-    private static GetBlock(resources:number[],width:number,height:number,x:number,y:number): number{
-        return resources[y*width + x];
-    }
 }

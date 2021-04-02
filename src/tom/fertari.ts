@@ -8,9 +8,9 @@ export default class Fertari extends Car implements Drawable,RigidBody{
     // collision volume
     private radius:number;
 
-    constructor(driver:Driver,radius:number,x:number,y:number,vx:number,vy:number,radian:number) {
-        super(driver,x,y,vx,vy,radian);
-        this.radius = radian;
+    constructor(driver:Driver,radius:number,x:number,y:number,vx:number,vy:number,turnRadian:number) {
+        super(driver,x,y,vx,vy,turnRadian);
+        this.radius = radius;
     }
 
     public GetRadius(): number {
@@ -33,9 +33,7 @@ export default class Fertari extends Car implements Drawable,RigidBody{
     public Draw(canvas: HTMLCanvasElement): void {
         var c2d:CanvasRenderingContext2D|null = canvas.getContext("2d");
         if (c2d != null) {
-            // alert(this.GetRadius());
             c2d.fillRect(this.GetX(), this.GetY(), this.GetRadius(),this.GetRadius());
-            // c2d.arc(this.GetX(), this.GetY(), this.GetRadius() , 0, 180, true);
         }
     }
 

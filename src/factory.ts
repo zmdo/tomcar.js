@@ -15,7 +15,7 @@ export default function GetTomCar(locationX:number,locationY:number,velocityX:nu
     var tomDriver:Tom = new Tom(tomBrain);
 
     // init car
-    var tomCar:Fertari = new Fertari(tomDriver,10,locationX,locationY,velocityX,velocityY,10);
+    var tomCar:Fertari = new Fertari(tomDriver,5,locationX,locationY,velocityX,velocityY,Math.PI/6);
     tomCar.SetSensorUseDefaultName(DEFAULT_RADAR_INSTANCE);
     
     return {

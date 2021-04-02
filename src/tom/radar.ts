@@ -10,6 +10,7 @@ export default class Radar extends SensorBase {
     }
     
     protected LineScan(lineBlocks: number[]): number {
+
         for(var i:number = 0 ; i < lineBlocks.length ; i ++) {
             if(lineBlocks[i] > 0) {
                 return i/lineBlocks.length;

@@ -86,7 +86,9 @@ export default class GAWorkFlow implements WorkFlow {
 
         // rule
         this.cars.forEach(car => {
-            if(this.environment.GetResource(GAWorkFlow.LAND,car.locationX,car.locationY) > 0) {
+            var x:number = Math.floor(car.locationX);
+            var y:number = Math.floor(car.locationY);
+            if(this.environment.GetResource(GAWorkFlow.LAND,x,y) > 0) {
                 car.alive = false;
             }
         });

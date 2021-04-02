@@ -47,10 +47,9 @@
             function tomcar_run() {
                 require(['tomcar','factory'],function(tomcar,factory){
                     var oV=document.getElementById('mainCanvas');
-                    var workflow = factory.GetGAWorkFlow(oV,10,100,100,10,0);
+                    var workflow = factory.GetGAWorkFlow(oV,2,100,100,10,0);
                     tomcar.TomCarStart(workflow);
                 });
-
             }
 
            </script>
