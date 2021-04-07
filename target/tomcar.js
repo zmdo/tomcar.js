@@ -356,11 +356,11 @@ define("tom/nn_cpu", ["require", "exports"], function (require, exports) {
                 var layer = this.GetLayer(i);
                 output = new Array(layer.size);
                 for (var j = 0; j < layer.size; j++) {
-                    output[j] = 0;
+                    var sum = 0;
                     for (var k = 0; k < layer.power[j].length; k++) {
-                        output[j] += layer.power[j][k] * input[k];
+                        sum += layer.power[j][k] * input[k];
                     }
-                    output[j] = this.ActivationFunction(layer.power[j].length, output[j], layer.bias[j]);
+                    output[j] = this.ActivationFunction(layer.power[j].length, sum, layer.bias[j]);
                 }
                 input = output;
             }
@@ -375,9 +375,15 @@ define("tom/nn_cpu", ["require", "exports"], function (require, exports) {
         constructor(powers, bias) {
             super(powers, bias);
         }
-        // sigmoid
+        // 
         ActivationFunction(len, sum, bias) {
-            return 1.0 / (1.0 + Math.exp(-(sum / len + bias)));
+            var value = (sum + bias) / len;
+            if (value > 0) {
+                return value;
+            }
+            else {
+                return 0;
+            }
         }
     }
     exports.DefaultNeuralNetwork = DefaultNeuralNetwork;
@@ -431,6 +437,7 @@ define("tom/brain", ["require", "exports", "tom/nn_cpu", "tom/radar"], function 
             var powers;
             var bias;
             var t;
+            var sign;
             powers = new Array(layers.length - 1);
             bias = new Array(layers.length - 1);
             for (var i = 1; i < layers.length; i++) {
@@ -439,10 +446,12 @@ define("tom/brain", ["require", "exports", "tom/nn_cpu", "tom/radar"], function 
                 bias[t] = new Array(layers[i]);
                 for (var j = 0; j < layers[i]; j++) {
                     powers[t][j] = new Array(layers[i - 1]);
-                    bias[t][j] = Math.random();
                     for (var k = 0; k < layers[i - 1]; k++) {
-                        powers[t][j][k] = Math.random();
+                        sign = Math.random() < 0.5 ? 1 : -1;
+                        powers[t][j][k] = Math.random() * sign;
                     }
+                    sign = Math.random() < 0.5 ? 1 : -1;
+                    bias[t][j] = Math.random() * sign;
                 }
             }
             this.net = new nn_cpu_1.DefaultNeuralNetwork(powers, bias);
@@ -451,16 +460,19 @@ define("tom/brain", ["require", "exports", "tom/nn_cpu", "tom/radar"], function 
          * Make neurons mutate by mutatedRate
          */
         Mutate() {
+            var sign;
             for (var i = 0; i < this.net.NumberOfLayers(); i++) {
                 var layer = this.net.GetLayer(i);
                 for (var j = 0; j < layer.size; j++) {
                     for (var k = 0; k < layer.power[j].length; k++) {
                         if (Math.random() < this.mutatedRate) {
-                            layer.power[j][k] = Math.random();
+                            sign = Math.random() < 0.5 ? 1 : -1;
+                            layer.power[j][k] = Math.random() * sign;
                         }
                     }
                     if (Math.random() < this.mutatedRate) {
-                        layer.bias[j] = Math.random();
+                        sign = Math.random() < 0.5 ? 1 : -1;
+                        layer.bias[j] = Math.random() * sign;
                     }
                 }
             }
@@ -823,9 +835,9 @@ define("tomcar", ["require", "exports"], function (require, exports) {
                 workflow.NextStep();
                 yield sleep(10);
             }
-            workflow.OrderdCars();
-            workflow.ExecuteStrategicPlan();
-            workflow.ReStart();
+            // workflow.OrderdCars();
+            // workflow.ExecuteStrategicPlan();
+            // workflow.ReStart();
             // while(true) {
             //     while(!workflow.IsEnd()) {
             //         setInterval( workflow.NextStep , 10);

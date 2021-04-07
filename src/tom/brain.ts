@@ -28,6 +28,7 @@ export default class TomBrain implements Gene,Brain {
         var powers : number[][][];
         var bias : number[][];
         var t:number;
+        var sign:number;
 
         powers = new Array(layers.length-1);
         bias = new Array(layers.length-1);
@@ -39,10 +40,13 @@ export default class TomBrain implements Gene,Brain {
             
             for (var j:number = 0 ; j < layers[i]; j ++ ) {
                 powers[t][j] = new Array(layers[i - 1]);
-                bias[t][j] = Math.random();
                 for (var k:number = 0 ; k < layers[i - 1] ; k ++) {
-                    powers[t][j][k] = Math.random();
+                    sign = Math.random() < 0.5 ? 1:-1;
+                    powers[t][j][k] = Math.random()*sign;
                 }
+
+                sign = Math.random() < 0.5 ? 1:-1;
+                bias[t][j] = Math.random()*sign;
             }
         }
         this.net = new DefaultNeuralNetwork(powers,bias);
@@ -52,16 +56,19 @@ export default class TomBrain implements Gene,Brain {
      * Make neurons mutate by mutatedRate
      */
     public Mutate(): void {
+        var sign:number;
         for (var i:number = 0 ; i < this.net.NumberOfLayers() ; i ++ ) {
             var layer = this.net.GetLayer(i);
             for(var j:number = 0 ; j < layer.size ; j ++ ) {
                 for(var k = 0 ; k < layer.power[j].length ; k ++) {
                     if(Math.random() < this.mutatedRate) {
-                        layer.power[j][k] = Math.random();
+                        sign = Math.random() < 0.5 ? 1:-1;
+                        layer.power[j][k] = Math.random()*sign;
                     }
                 }
                 if(Math.random() < this.mutatedRate) {
-                    layer.bias[j] = Math.random();
+                    sign = Math.random() < 0.5 ? 1:-1;
+                    layer.bias[j] = Math.random()*sign;
                 }
             }
         }
@@ -76,7 +83,6 @@ export default class TomBrain implements Gene,Brain {
         
         var powers : number[][][];
         var bias : number[][];
-
 
         var nol:number = this.net.NumberOfLayers();
         powers = new Array(nol);

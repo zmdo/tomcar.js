@@ -17,7 +17,7 @@ export default class Tom extends Driver {
 
         // get best result
         var result = Tom.BestChoice(out);
-
+        
         // toggle direction
         switch(result) {
             case 1: 

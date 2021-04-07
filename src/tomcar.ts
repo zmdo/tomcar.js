@@ -9,9 +9,9 @@ export async function TomCarStart(workflow:WorkFlow): Promise<void>{
         workflow.NextStep();
         await sleep(10);
     }
-    workflow.OrderdCars();
-    workflow.ExecuteStrategicPlan();
-    workflow.ReStart();
+    // workflow.OrderdCars();
+    // workflow.ExecuteStrategicPlan();
+    // workflow.ReStart();
 
     // while(true) {
 

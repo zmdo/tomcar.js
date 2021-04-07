@@ -30,11 +30,11 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
             var layer = this.GetLayer(i);
             output = new Array(layer.size);
             for(var j:number = 0; j < layer.size ; j ++) {
-                output[j] = 0;
+                var sum:number = 0;
                 for(var k:number = 0; k < layer.power[j].length ; k ++) {
-                    output[j] += layer.power[j][k]*input[k];
+                    sum += layer.power[j][k]*input[k];
                 }
-                output[j] = this.ActivationFunction(layer.power[j].length,output[j],layer.bias[j]);
+                output[j] = this.ActivationFunction(layer.power[j].length,sum,layer.bias[j]);
             }
             input = output;
         }
@@ -53,9 +53,14 @@ export class DefaultNeuralNetwork extends NeuralNetworkBase {
         super(powers,bias);
     }
 
-    // sigmoid
+    // 
     protected ActivationFunction(len:number,sum: number, bias: number): number {
-        return 1.0/(1.0 + Math.exp(-(sum/len + bias)));
+        var value:number = (sum + bias)/len;
+        if (value > 0) {
+            return value;
+        } else {
+            return 0;
+        }
     }
 
 }
