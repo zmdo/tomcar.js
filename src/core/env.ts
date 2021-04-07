@@ -26,16 +26,15 @@ export default class Environment {
 
     /**
      * Get all the data of a kind of resources
-     * The data obtained is REPLICATION
      * @param name resource name
-     * @returns resource data replication
+     * @returns resource data 
      */
     public GetAllResources(name:string): number[]{
         var resource = this.GetAllResourcesByName(name);
         // copy data
-        var resourceCopy : number[] = new Array(resource.length);
-        Object.assign(resourceCopy,resource);
-        return resourceCopy;
+        // var resourceCopy : number[] = new Array(resource.length);
+        // Object.assign(resourceCopy,resource);
+        return resource;
     }
 
     /**

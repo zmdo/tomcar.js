@@ -72,16 +72,15 @@ define("core/env", ["require", "exports"], function (require, exports) {
         }
         /**
          * Get all the data of a kind of resources
-         * The data obtained is REPLICATION
          * @param name resource name
-         * @returns resource data replication
+         * @returns resource data
          */
         GetAllResources(name) {
             var resource = this.GetAllResourcesByName(name);
             // copy data
-            var resourceCopy = new Array(resource.length);
-            Object.assign(resourceCopy, resource);
-            return resourceCopy;
+            // var resourceCopy : number[] = new Array(resource.length);
+            // Object.assign(resourceCopy,resource);
+            return resource;
         }
         /**
          * Set resource data
