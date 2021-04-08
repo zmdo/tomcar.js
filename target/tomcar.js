@@ -7,6 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+define("controller", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Controller {
+    }
+    exports.default = Controller;
+});
 define("core/brain", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -717,6 +724,7 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             // clear all 
             c2d.clearRect(0, 0, width, height);
             // draw background
+            c2d.fillStyle = "black";
             var lands = this.environment.GetAllResources(GAWorkFlow.LAND);
             for (var i = 0; i < width; i++) {
                 for (var j = 0; j < height; j++) {
@@ -727,6 +735,14 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             }
             // draw cars
             this.cars.forEach(car => {
+                if (c2d == null)
+                    return;
+                if (car.IsAlive()) {
+                    c2d.fillStyle = "blue";
+                }
+                else {
+                    c2d.fillStyle = "red";
+                }
                 car.Draw(this.canvas);
             });
         }
@@ -830,21 +846,22 @@ define("tomcar", ["require", "exports"], function (require, exports) {
         return __awaiter(this, void 0, void 0, function* () {
             workflow.Init();
             workflow.Start();
-            while (!workflow.IsEnd()) {
-                workflow.NextStep();
-                yield sleep(10);
-            }
+            // while(!workflow.IsEnd()) {
+            //    workflow.NextStep();
+            //    await sleep(10);
+            // }
             // workflow.OrderdCars();
             // workflow.ExecuteStrategicPlan();
             // workflow.ReStart();
-            // while(true) {
-            //     while(!workflow.IsEnd()) {
-            //         setInterval( workflow.NextStep , 10);
-            //     }
-            //     workflow.OrderdCars();
-            //     workflow.ExecuteStrategicPlan();
-            //     workflow.ReStart();
-            // }
+            while (true) {
+                while (!workflow.IsEnd()) {
+                    workflow.NextStep();
+                    yield sleep(10);
+                }
+                workflow.OrderdCars();
+                workflow.ExecuteStrategicPlan();
+                workflow.ReStart();
+            }
         });
     }
     exports.TomCarStart = TomCarStart;

@@ -5,24 +5,18 @@ export async function TomCarStart(workflow:WorkFlow): Promise<void>{
     workflow.Init();
     workflow.Start();
 
-    while(!workflow.IsEnd()) {
-        workflow.NextStep();
-        await sleep(10);
+    while(true) {
+
+        while(!workflow.IsEnd()) {
+            workflow.NextStep();
+            await sleep(10);
+        }
+
+        workflow.OrderdCars();
+        workflow.ExecuteStrategicPlan();
+        workflow.ReStart();
+
     }
-    // workflow.OrderdCars();
-    // workflow.ExecuteStrategicPlan();
-    // workflow.ReStart();
-
-    // while(true) {
-
-    //     while(!workflow.IsEnd()) {
-    //         setInterval( workflow.NextStep , 10);
-    //     }
-    //     workflow.OrderdCars();
-    //     workflow.ExecuteStrategicPlan();
-    //     workflow.ReStart();
-
-    // }
 }
 
 const sleep = (timeout:number)=>new Promise((resolve, reject)=>{

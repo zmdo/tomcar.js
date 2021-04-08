@@ -1,23 +1,49 @@
 <html>
     <head>
         <title>Tomcar Example</title>
-        <script src="../target/require.js" defer async="true" data-main="../target/tomcar"></script>
-        <script src="../target/tomcar.js"></script>
 
-        <script>
+        <link rel="stylesheet" href="main.css" type="text/css" data-for="result">
 
-            // import {GetGAWorkFlow,TomCarStart} from "js/tomcar";
-
+        <script type="text/javascript" src="../target/vue.min.js"></script>
+        <script type="text/javascript" src="../target/require.js"></script>
+        <script type="text/javascript" src="../target/tomcar.js"></script>
+        
+        
+        <script type="text/javascript">
             window.onload=function () {
-             let oV=document.getElementById('mainCanvas');
-             let gd=oV.getContext('2d'); //图形上下文——绘图接口
-             let oColor=document.getElementById('color1');
-           
-             let color;
-             oColor.onchange=function () {
-              color=this.value;
-             }
-           
+
+            require.config({
+                paths:{
+                'vue':'../target/vue.min',
+                }
+            });
+            
+            const width = 500;
+            const height = 500;
+
+            let oV=document.getElementById('main-canvas');
+            let gd=oV.getContext('2d'); //图形上下文——绘图接口
+
+            // var url = './map.png';
+            // var map = new Image(width, height);
+            // map.src = url;
+            // map.onload = function() {
+            //     gd.drawImage(map,0,0);
+                
+            //     alert(map.getImageData(0,0,width,height));
+
+            //     var imgData = gd.getImageData(0,0,width,height);
+            //     gd.clearRect(0,0,width,height);
+            //     for (var x = 0 ; x < width ; x ++) {
+            //         for (var y = 0; y < height; y++) {
+            //             pos = j*width*4 + i*4;
+            //             if (imgData.data[pos] > 0) {
+            //                 gd.fillRect(x,y,1,1);
+            //             }
+            //         }
+            //     }
+            // };
+
              let lastX,lastY;
              oV.onmousedown=function (ev) {
            
@@ -33,7 +59,7 @@
                lastX=ev.offsetX;
                lastY=ev.offsetY;
            
-               gd.strokeStyle=color;//用获取到的颜色作为绘制颜色
+               gd.strokeStyle="red";//用获取到的颜色作为绘制颜色
                gd.stroke();
            
               }
@@ -42,24 +68,83 @@
                oV.onmouseup=null;
               } 
              }
-            }
 
-            function tomcar_run() {
-                require(['tomcar','factory'],function(tomcar,factory){
-                    var oV=document.getElementById('mainCanvas');
-                    var workflow = factory.GetGAWorkFlow(oV,5,100,100,10,0);
-                    tomcar.TomCarStart(workflow);
-                });
             }
 
            </script>
 
     </head>
     <body>
-        <div id = "tomcar">
-            <input type="color" id="color1" /><br/>
-            <canvas id="mainCanvas" width="500" height="500"></canvas>
+        
+        <div id = "buttons">
+            <button id = "runButton" onclick="tomcar_run()">开始</button>
+            <button onclick="">暂停</button>
+            <button onclick="">停止</button>
+            <button onclick="">清理地图</button>
+            <button onclick="">加载地图</button>
+            <button onclick="">保存地图</button>
+            <button onclick="">重置</button>
         </div>
-        <button onclick="tomcar_run()" >测试</button>
+
+        <div id = "options">
+            数量:
+            <input v-model="total" placeholder="total">
+            出发点:
+            <input v-model="car_x" placeholder="location x">
+            <input v-model="car_y" placeholder="location y">
+        </div>
+
+        <div id = "tomcar">
+            <!-- <input type="color" id="color1" /><br/> -->
+            <canvas id="main-canvas" width="500" height="500"></canvas>
+            <div id="car-starting-point" v-bind:style="{top:car_y + 'px',left:car_x + 'px'}"></div>
+        </div>
+
+        <div id = "ranking-list" height="500" width="200">
+
+        </div>
+
+        <script type="text/javascript">
+
+            let options;
+            let data = {
+                // 数量绑定
+                total: 100,
+                // 初始位置输入框数据绑定
+                car_x: 65,
+                car_y: 60,
+            };
+
+            require(['vue'],function(Vue){
+
+                options = new Vue({
+                    el: '#options',
+                    data: data,
+                });
+
+                new Vue({
+                    el: '#car-starting-point',
+                    data: data,
+                });
+            });
+
+            // 运行按钮
+            function tomcar_run() {
+                require(['tomcar','factory'],function(tomcar,factory){
+                    var oV=document.getElementById('main-canvas');
+                    var workflow = factory.GetGAWorkFlow(oV,Number(options.total),Number(options.car_x),Number(options.car_y),10,0);
+                    tomcar.TomCarStart(workflow);
+                });
+                
+                var runButtton = document.getElementById("runButton");
+                runButtton.disabled = true;
+                
+                var carStartingPoint =document.getElementById('car-starting-point');
+                carStartingPoint.hidden = true;
+
+            }
+
+        </script>
+
     </body>
 </html>

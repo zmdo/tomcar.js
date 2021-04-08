@@ -110,6 +110,7 @@ export default class GAWorkFlow implements WorkFlow {
         c2d.clearRect(0,0,width,height);
 
         // draw background
+        c2d.fillStyle="black";
         var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
         for(var i:number = 0; i < width ; i++ ) {
             for(var j:number = 0; j < height ; j++ ) {
@@ -121,6 +122,12 @@ export default class GAWorkFlow implements WorkFlow {
 
         // draw cars
         this.cars.forEach(car => {
+            if (c2d == null) return ;
+            if(car.IsAlive()) {
+                c2d.fillStyle="blue";
+            } else {
+                c2d.fillStyle="red";
+            }
             car.Draw(this.canvas);
         });
 
