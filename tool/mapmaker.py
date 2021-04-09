@@ -1,10 +1,15 @@
 from PIL import Image
 import numpy as np
 
+# load image file
 mapImage = Image.open('./map.png')
 mapImageArray = np.array(mapImage)
 
-rows,cols,channel = mapImageArray.shape
+
+rows = 500
+cols = 500
+
+# read map image pixels
 binArray = np.zeros((rows, cols), dtype=int)
 
 for i in range(rows):
@@ -17,15 +22,12 @@ for i in range(rows):
         else:
             binArray[i,j]=0
 
+# compress data
 output = []
 zeros = 0
 ones = 0
 for i in range(rows):
-    ###
-    if (i < cols and binArray[i,0] == 0):
-        output += [0]
-    else :
-        output += [-1]
+    output += [0]
     ###
     for j in range(cols):
         if (binArray[i,j] == 0) :
@@ -46,6 +48,4 @@ for i in range(rows):
         output += [ones]
         ones = 0
 
-print(output)
-np.savetxt("map.txt",np.asarray(output),fmt='%d',delimiter=',')
-
+np.savetxt("default.map",np.asarray(output[1:]),fmt='%d',delimiter=',',newline=',')

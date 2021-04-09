@@ -2,88 +2,73 @@
     <head>
         <title>Tomcar Example</title>
 
-        <link rel="stylesheet" href="main.css" type="text/css" data-for="result">
+        <link rel="stylesheet" href="css/main.css" type="text/css" data-for="result">
 
-        <script type="text/javascript" src="../target/vue.min.js"></script>
-        <script type="text/javascript" src="../target/require.js"></script>
-        <script type="text/javascript" src="../target/tomcar.js"></script>
-        
-        
+        <script type="text/javascript" src="./js/vue.min.js"></script>
+        <script type="text/javascript" src="./js/require.js"></script>
+        <script type="text/javascript" src="./js/map.js"></script>
+        <script type="text/javascript" src="./js/tomcar.js"></script>
+
         <script type="text/javascript">
+
             window.onload=function () {
 
-            require.config({
-                paths:{
-                'vue':'../target/vue.min',
-                }
-            });
+                // requirejs 配置
+                require.config({
+                    paths:{
+                    'vue':'./js/vue.min',
+                    }
+                });
             
-            const width = 500;
-            const height = 500;
+                // 画布配置
+                const width = 500;
+                const height = 500;
 
-            let oV=document.getElementById('main-canvas');
-            let gd=oV.getContext('2d'); //图形上下文——绘图接口
+                let mainCanvas=document.getElementById('main-canvas');
+                let gd=mainCanvas.getContext('2d'); //图形上下文——绘图接口
 
-            // var url = './map.png';
-            // var map = new Image(width, height);
-            // map.src = url;
-            // map.onload = function() {
-            //     gd.drawImage(map,0,0);
+                // 设置监听器
+                let lastX,lastY;
+                mainCanvas.onmousedown=function (ev) {
+            
+                    lastX=ev.offsetX;
+                    lastY=ev.offsetY;
                 
-            //     alert(map.getImageData(0,0,width,height));
-
-            //     var imgData = gd.getImageData(0,0,width,height);
-            //     gd.clearRect(0,0,width,height);
-            //     for (var x = 0 ; x < width ; x ++) {
-            //         for (var y = 0; y < height; y++) {
-            //             pos = j*width*4 + i*4;
-            //             if (imgData.data[pos] > 0) {
-            //                 gd.fillRect(x,y,1,1);
-            //             }
-            //         }
-            //     }
-            // };
-
-             let lastX,lastY;
-             oV.onmousedown=function (ev) {
-           
-              lastX=ev.offsetX;
-              lastY=ev.offsetY;
-           
-              oV.onmousemove=function (ev) {
-               gd.beginPath();//清除之前所有的路径
+                    mainCanvas.onmousemove=function (ev) {
+                        gd.beginPath();//清除之前所有的路径
+                            
+                        gd.moveTo(lastX,lastY);
+                        gd.lineTo(ev.offsetX,ev.offsetY);
+                    
+                        lastX=ev.offsetX;
+                        lastY=ev.offsetY;
+                    
+                        gd.strokeStyle="red";//用获取到的颜色作为绘制颜色
+                        gd.stroke();
                 
-               gd.moveTo(lastX,lastY);
-               gd.lineTo(ev.offsetX,ev.offsetY);
-           
-               lastX=ev.offsetX;
-               lastY=ev.offsetY;
-           
-               gd.strokeStyle="red";//用获取到的颜色作为绘制颜色
-               gd.stroke();
-           
-              }
-              oV.onmouseup=function () {
-               oV.onmousemove=null;
-               oV.onmouseup=null;
-              } 
-             }
+                    }
 
+                    mainCanvas.onmouseup=function () {
+                        mainCanvas.onmousemove=null;
+                        mainCanvas.onmouseup=null;
+                    } 
+                }
+
+                // 绘制默认地图
+                DrawDefaultMap(mainCanvas);
             }
-
            </script>
 
     </head>
     <body>
         
         <div id = "buttons">
-            <button id = "runButton" onclick="tomcar_run()">开始</button>
-            <button onclick="">暂停</button>
-            <button onclick="">停止</button>
-            <button onclick="">清理地图</button>
-            <button onclick="">加载地图</button>
-            <button onclick="">保存地图</button>
-            <button onclick="">重置</button>
+            <button id = "run-button" onclick="TomcarRun()">开始</button>
+            <button id = "pause-button" onclick="">暂停</button>
+            <button id = "stop-button" onclick="">停止</button>
+            <button id = "clear-button" onclick="ClearMap()">清理地图</button>
+            <button id = "load-map-button" onclick="">加载地图</button>
+            <button id = "reset-button" onclick="">重置</button>
         </div>
 
         <div id = "options">
@@ -128,22 +113,32 @@
                 });
             });
 
+            // 获取canvas 
+            var canvas=document.getElementById('main-canvas');
+            var runButtton = document.getElementById("run-button");
+            var clearButtton = document.getElementById("clear-button");
+
             // 运行按钮
-            function tomcar_run() {
+            function TomcarRun() {
+
                 require(['tomcar','factory'],function(tomcar,factory){
-                    var oV=document.getElementById('main-canvas');
-                    var workflow = factory.GetGAWorkFlow(oV,Number(options.total),Number(options.car_x),Number(options.car_y),10,0);
+                    var workflow = factory.GetGAWorkFlow(canvas,Number(options.total),Number(options.car_x),Number(options.car_y),10,0);
                     tomcar.TomCarStart(workflow);
                 });
                 
-                var runButtton = document.getElementById("runButton");
+            
                 runButtton.disabled = true;
-                
+                clearButtton.disabled = true;
+
                 var carStartingPoint =document.getElementById('car-starting-point');
                 carStartingPoint.hidden = true;
 
             }
 
+            function ClearMap() {
+                var gd = canvas.getContext('2d');
+                gd.clearRect(0,0,canvas.width,canvas.height);
+            }
         </script>
 
     </body>

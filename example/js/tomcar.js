@@ -846,13 +846,6 @@ define("tomcar", ["require", "exports"], function (require, exports) {
         return __awaiter(this, void 0, void 0, function* () {
             workflow.Init();
             workflow.Start();
-            // while(!workflow.IsEnd()) {
-            //    workflow.NextStep();
-            //    await sleep(10);
-            // }
-            // workflow.OrderdCars();
-            // workflow.ExecuteStrategicPlan();
-            // workflow.ReStart();
             while (true) {
                 while (!workflow.IsEnd()) {
                     workflow.NextStep();
@@ -869,4 +862,3 @@ define("tomcar", ["require", "exports"], function (require, exports) {
         setTimeout(resolve, timeout);
     });
 });
-//# sourceMappingURL=tomcar.js.map
