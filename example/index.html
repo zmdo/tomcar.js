@@ -78,11 +78,11 @@
             出发点:
             <input class="option-filed" v-model="car_x" placeholder="location x">
             <input class="option-filed" v-model="car_y" placeholder="location y">
-            <div id="gene-options">
+            <div>
                 选项:
-                <input name="setting" v-model="lock" type="checkbox" value="">锁定基因组</input>
-                <input name="setting" v-model="chiasma" type="checkbox" value="">交换重组</input>
-                <input name="setting" v-model="mutate" type="checkbox" value="">基因突变</input>
+                <input class="gene-option" id="lock-checkbox" name="setting" v-model="lock" type="checkbox" v-on:input="LockInput" value="">锁定基因组</input>
+                <input class="gene-option" id="chiasma-checkbox" name="setting" v-model="chiasma" v-on:input="UnlockInput" type="checkbox" value="">交换重组</input>
+                <input class="gene-option" id="mutate-checkbox" name="setting" v-model="mutate" v-on:input="UnlockInput" type="checkbox" value="">基因突变</input>
             </div>
         </div>
 
@@ -141,6 +141,13 @@
             var resetButtton = document.getElementById("reset-button");
             var setDefaultButtton = document.getElementById("set-default-button");
 
+            var lockCheckbox = document.getElementById("lock-checkbox");
+            var chiasmaCheckbox = document.getElementById("chiasma-checkbox");
+            var mutateCheckbox = document.getElementById("mutate-checkbox");
+
+            var optionsFields = document.getElementsByClassName("option-filed");
+            var geneOptions = document.getElementsByClassName("gene-option");
+
             pauseButtton.disabled = true;
             stopButtton.disabled = true;
 
@@ -185,6 +192,14 @@
                 stopButtton.disabled = false;
                 resetButtton.disabled = true;
 
+                for(var i = 0; i < optionsFields.length ; i ++) {
+                    optionsFields[i].disabled = true;
+                }
+
+                for(var i = 0; i < geneOptions.length ; i ++) {
+                    geneOptions[i].disabled = true;
+                }
+
                 // 出发点
                 var carStartingPoint = document.getElementById('car-starting-point');
                 carStartingPoint.hidden = true;
@@ -223,6 +238,14 @@
                 pauseButtton.innerText = "暂停";
                 stopButtton.disabled = true;
                 resetButtton.disabled = false;
+                
+                for(var i = 0; i < optionsFields.length ; i ++) {
+                    optionsFields[i].disabled = false;
+                }
+
+                for(var i = 0; i < geneOptions.length ; i ++) {
+                    geneOptions[i].disabled = false;
+                }
 
                 // 出发点
                 var carStartingPoint = document.getElementById('car-starting-point');
@@ -245,6 +268,16 @@
                 location.reload();
             }
 
+            function LockInput() {
+                if(!options.lock){
+                    options.mutate = false;
+                    options.chiasma = false;
+                } 
+            }
+
+            function UnlockInput() {
+                options.lock = false;
+            }
         </script>
 
     </body>
