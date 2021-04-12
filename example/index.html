@@ -7,7 +7,7 @@
         <script type="text/javascript" src="./js/vue.min.js"></script>
         <script type="text/javascript" src="./js/require.js"></script>
         <script type="text/javascript" src="./js/map.js"></script>
-        <script type="text/javascript" src="../target/tomcar.js"></script>
+        <script type="text/javascript" src="./js/tomcar.js"></script>
 
         <script type="text/javascript">
 
@@ -68,7 +68,8 @@
             <button id = "pause-button" onclick="Pause()">暂停</button>
             <button id = "stop-button" onclick="Stop()">停止</button>
             <button id = "clear-button" onclick="ClearMap()">清理地图</button>
-            <button id = "reset-button" onclick="Reset()">重置</button>
+            <button id = "reset-button" onclick="Reset()">数据重置</button>
+            <button id = "set-default-button" onclick="SetDefault()">恢复默认</button>
         </div>
 
         <div id = "options">
@@ -137,6 +138,8 @@
             var clearButtton = document.getElementById("clear-button");
             var pauseButtton = document.getElementById("pause-button");
             var stopButtton = document.getElementById("stop-button");
+            var resetButtton = document.getElementById("reset-button");
+            var setDefaultButtton = document.getElementById("set-default-button");
 
             pauseButtton.disabled = true;
             stopButtton.disabled = true;
@@ -144,13 +147,14 @@
             // 构建控制器
             var controller;
             var workflow;
+            var rankingList;
             require(['vue','tomcar','factory'],function(Vue,TomcarController,factory){
                 // 创建控制器
                 workflow = factory.GetGAWorkFlow(canvas,Number(data.total),Number(data.car_x),Number(data.car_y),10,0);
                 controller = new TomcarController.default(workflow);
 
                 // 设置列表
-                new Vue({
+                rankingList = new Vue({
                     el: '#ranking-list',
                     data: {
                         'cars':workflow.cars,
@@ -179,6 +183,7 @@
                 clearButtton.disabled = true;
                 pauseButtton.disabled = false;
                 stopButtton.disabled = false;
+                resetButtton.disabled = true;
 
                 // 出发点
                 var carStartingPoint = document.getElementById('car-starting-point');
@@ -217,15 +222,29 @@
                 pauseButtton.disabled = true;
                 pauseButtton.innerText = "暂停";
                 stopButtton.disabled = true;
-                
+                resetButtton.disabled = false;
+
                 // 出发点
                 var carStartingPoint = document.getElementById('car-starting-point');
                 carStartingPoint.hidden = false;
             }
 
             function Reset() {
+                require(['vue','tomcar','factory'],function(Vue,TomcarController,factory){
+                    // 创建控制器
+                    workflow = factory.GetGAWorkFlow(canvas,Number(data.total),Number(data.car_x),Number(data.car_y),10,0);
+                    controller = new TomcarController.default(workflow);
+
+                    // 设置列表
+                    rankingList.cars = workflow.cars;
+
+                });
+            }
+
+            function SetDefault() {
                 location.reload();
             }
+
         </script>
 
     </body>

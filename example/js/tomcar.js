@@ -143,9 +143,9 @@ define("core/sensor", ["require", "exports"], function (require, exports) {
                 // ger scan line 
                 var lineBlocks = new Array(this.detectionRange);
                 for (var len = 0; len < this.detectionRange; len++) {
-                    var i = len * cos;
-                    var j = len * sin;
-                    var pos = Math.floor((j + y) * width + (i + x));
+                    var i = Math.floor(x + len * cos);
+                    var j = Math.floor(y + len * sin);
+                    var pos = Math.floor(j * width + i);
                     lineBlocks[len] = resources[pos];
                 }
                 result[index] = this.LineScan(lineBlocks);
@@ -398,7 +398,7 @@ define("tom/radar", ["require", "exports", "core/sensor"], function (require, ex
         LineScan(lineBlocks) {
             for (var i = 0; i < lineBlocks.length; i++) {
                 if (lineBlocks[i] > 0) {
-                    return i / lineBlocks.length;
+                    return (i * 1.0) / lineBlocks.length;
                 }
             }
             return 1.0;
@@ -588,8 +588,6 @@ define("tom/fertari", ["require", "exports", "core/car", "tom/radar"], function 
         Draw(canvas) {
             var c2d = canvas.getContext("2d");
             if (c2d != null) {
-                // 绘制车主题
-                c2d.fillRect(this.GetX(), this.GetY(), this.GetRadius(), this.GetRadius());
                 // 绘制传感器数据
                 var radarData = this.GetScanResultBy(radar_2.default.SENSOR_NAME);
                 if (radarData != null) {
@@ -597,23 +595,30 @@ define("tom/fertari", ["require", "exports", "core/car", "tom/radar"], function 
                     var radar = (this.sensors.get(radar_2.default.SENSOR_NAME));
                     var visualField = radar.visualField;
                     var scanLine = radar.scanLine;
-                    // 路径清除
-                    c2d.beginPath();
-                    c2d.moveTo(this.locationX, this.locationY);
                     // 角度
                     var cos, sin;
                     var dAngle = visualField / scanLine;
                     var angle = this.GetCurrentDirection() - visualField / 2;
+                    c2d.strokeStyle = "green";
                     for (var i = 0; i < radarData.length; i++) {
-                        let visualLen = visualField * radarData[i];
+                        // 绘制起点
+                        c2d.beginPath();
+                        c2d.moveTo(this.locationX, this.locationY);
+                        // 绘制终点
+                        let visualLen = radar.detectionRange * radarData[i];
                         sin = Math.sin(angle);
                         cos = Math.cos(angle);
-                        c2d.lineTo(cos * visualLen, sin * visualLen);
+                        c2d.lineTo(this.locationX + Math.floor(cos * visualLen), this.locationY + Math.floor(sin * visualLen));
                         angle += dAngle;
+                        // 绘制扫描线
+                        c2d.stroke();
                     }
-                    c2d.strokeStyle = "red"; //用获取到的颜色作为绘制颜色
-                    c2d.stroke();
                 }
+                // 绘制车主体
+                c2d.strokeStyle = "blue";
+                c2d.beginPath();
+                c2d.arc(this.GetX(), this.GetY(), this.GetRadius(), 0, 2 * Math.PI, false);
+                c2d.fill();
             }
         }
     }
