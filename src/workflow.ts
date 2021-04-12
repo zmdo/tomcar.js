@@ -147,7 +147,7 @@ export default class GAWorkFlow implements WorkFlow {
     public OrderdCars(): Car[] {
         for (var i:number = 0 ; i < this.cars.length ; i ++ ) {
             for (var j:number = i; j < this.cars.length ; j ++ ) {
-                if(this.cars[j].mileage < this.cars[i].mileage) {
+                if(this.cars[j].mileage > this.cars[i].mileage) {
                     var car:Fertari = this.cars[i];
                     this.cars[i] = this.cars[j];
                     this.cars[j] = car;

@@ -752,7 +752,7 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
         OrderdCars() {
             for (var i = 0; i < this.cars.length; i++) {
                 for (var j = i; j < this.cars.length; j++) {
-                    if (this.cars[j].mileage < this.cars[i].mileage) {
+                    if (this.cars[j].mileage > this.cars[i].mileage) {
                         var car = this.cars[i];
                         this.cars[i] = this.cars[j];
                         this.cars[j] = car;

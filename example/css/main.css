@@ -21,6 +21,7 @@
 #ranking-list {
     width: 200px;
     height: 500px;
+    font-size: 12px;
     overFlow-y:scroll;
     border:1px solid blue;
     float: left;
