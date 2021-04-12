@@ -73,10 +73,16 @@
 
         <div id = "options">
             数量:
-            <input v-model="total" placeholder="total">
+            <input class="option-filed" v-model="total" placeholder="total">
             出发点:
-            <input v-model="car_x" placeholder="location x">
-            <input v-model="car_y" placeholder="location y">
+            <input class="option-filed" v-model="car_x" placeholder="location x">
+            <input class="option-filed" v-model="car_y" placeholder="location y">
+            <div id="gene-options">
+                选项:
+                <input name="setting" v-model="lock" type="checkbox" value="">锁定基因组</input>
+                <input name="setting" v-model="chiasma" type="checkbox" value="">交换重组</input>
+                <input name="setting" v-model="mutate" type="checkbox" value="">基因突变</input>
+            </div>
         </div>
 
         <div id = "tomcar">
@@ -102,6 +108,10 @@
                 // 初始位置输入框数据绑定
                 car_x: 65,
                 car_y: 60,
+                // 选项
+                lock:false,
+                chiasma:true,
+                mutate:true,
             };
 
             require(['vue'],function(Vue){

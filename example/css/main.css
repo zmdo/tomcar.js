@@ -29,7 +29,13 @@
 
 #options {
     font-size: 12px;
+    margin: 10px
 }
-#options input{
+
+.option-filed {
     width: 100px;
+}
+
+#gene-options {
+    margin-top: 5px;
 }
