@@ -45,8 +45,10 @@ export default class TomcarController {
                 }
                 await sleep(10);
             }
-            this.workflow.ExecuteStrategicPlan(this.options);
-            this.workflow.ReStart();
+            if (this.runFlag) {
+                this.workflow.ExecuteStrategicPlan(this.options);
+                this.workflow.ReStart();
+            }
         }
     }
 }

@@ -171,13 +171,13 @@ export default class GAWorkFlow implements WorkFlow {
 
     public ExecuteStrategicPlan(options:Map<String,Object>): void {
 
-        var halfNum:number = this.cars.length/2;
+        var len:number = this.cars.length;
 
         var chiasmaFlag = options.get(GAWorkFlow.CHIASMA_CONTROL);
         if (chiasmaFlag != null && (<boolean> chiasmaFlag)) {
-            for(var i:number = 0; i < halfNum ; i ++ ) {
-                var driverA:Driver = this.cars[i].driver;
-                var driverB:Driver = this.cars[i + halfNum].driver;
+            for(var i:number = 0; i < len ; i ++ ) {
+                var driverA:Driver = this.cars[0].driver;
+                var driverB:Driver = this.cars[i].driver;
                 if (driverA instanceof Tom && 
                     driverB instanceof Tom) {
                     var brainA:TomBrain = (<Tom> driverA).brain;

@@ -801,12 +801,12 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             return bestCar;
         }
         ExecuteStrategicPlan(options) {
-            var halfNum = this.cars.length / 2;
+            var len = this.cars.length;
             var chiasmaFlag = options.get(GAWorkFlow.CHIASMA_CONTROL);
             if (chiasmaFlag != null && chiasmaFlag) {
-                for (var i = 0; i < halfNum; i++) {
-                    var driverA = this.cars[i].driver;
-                    var driverB = this.cars[i + halfNum].driver;
+                for (var i = 0; i < len; i++) {
+                    var driverA = this.cars[0].driver;
+                    var driverB = this.cars[i].driver;
                     if (driverA instanceof tom_1.default &&
                         driverB instanceof tom_1.default) {
                         var brainA = driverA.brain;
@@ -907,8 +907,10 @@ define("tomcar", ["require", "exports", "workflow"], function (require, exports,
                         }
                         yield sleep(10);
                     }
-                    this.workflow.ExecuteStrategicPlan(this.options);
-                    this.workflow.ReStart();
+                    if (this.runFlag) {
+                        this.workflow.ExecuteStrategicPlan(this.options);
+                        this.workflow.ReStart();
+                    }
                 }
             });
         }
