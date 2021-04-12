@@ -34,7 +34,7 @@ export abstract class SensorBase implements Sensor {
     public abstract GetName(): string ;
 
     public Scan(env: Environment, x: number, y: number, direction: number): number[] {
-        
+
         // get resources
         var resources = env.GetAllResources(this.GetDetectableResourceName());
 
@@ -56,9 +56,9 @@ export abstract class SensorBase implements Sensor {
 			var lineBlocks:number[] = new Array(this.detectionRange); 			
 			for (var len:number = 0 ; len < this.detectionRange ; len ++) { 
                 
-				var i:number = len*cos;
-				var j:number = len*sin;
-                var pos:number = Math.floor((j+y)*width + (i+x))
+				var i:number = Math.floor(x + len*cos);
+				var j:number = Math.floor(y + len*sin);
+                var pos:number = Math.floor(j*width + i);
 
 				lineBlocks[len] = resources[pos];
 				

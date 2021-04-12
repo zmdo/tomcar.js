@@ -564,7 +564,7 @@ define("physis/rigid_body", ["require", "exports"], function (require, exports) 
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("tom/fertari", ["require", "exports", "core/car"], function (require, exports, car_1) {
+define("tom/fertari", ["require", "exports", "core/car", "tom/radar"], function (require, exports, car_1, radar_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Fertari extends car_1.default {
@@ -588,13 +588,38 @@ define("tom/fertari", ["require", "exports", "core/car"], function (require, exp
         Draw(canvas) {
             var c2d = canvas.getContext("2d");
             if (c2d != null) {
+                // 绘制车主题
                 c2d.fillRect(this.GetX(), this.GetY(), this.GetRadius(), this.GetRadius());
+                // 绘制传感器数据
+                var radarData = this.GetScanResultBy(radar_2.default.SENSOR_NAME);
+                if (radarData != null) {
+                    // 获取雷达
+                    var radar = (this.sensors.get(radar_2.default.SENSOR_NAME));
+                    var visualField = radar.visualField;
+                    var scanLine = radar.scanLine;
+                    // 路径清除
+                    c2d.beginPath();
+                    c2d.moveTo(this.locationX, this.locationY);
+                    // 角度
+                    var cos, sin;
+                    var dAngle = visualField / scanLine;
+                    var angle = this.GetCurrentDirection() - visualField / 2;
+                    for (var i = 0; i < radarData.length; i++) {
+                        let visualLen = visualField * radarData[i];
+                        sin = Math.sin(angle);
+                        cos = Math.cos(angle);
+                        c2d.lineTo(cos * visualLen, sin * visualLen);
+                        angle += dAngle;
+                    }
+                    c2d.strokeStyle = "red"; //用获取到的颜色作为绘制颜色
+                    c2d.stroke();
+                }
             }
         }
     }
     exports.default = Fertari;
 });
-define("tom/tom", ["require", "exports", "core/driver", "tom/radar"], function (require, exports, driver_1, radar_2) {
+define("tom/tom", ["require", "exports", "core/driver", "tom/radar"], function (require, exports, driver_1, radar_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Tom extends driver_1.default {
@@ -634,9 +659,9 @@ define("tom/tom", ["require", "exports", "core/driver", "tom/radar"], function (
         }
     }
     exports.default = Tom;
-    Tom.DEPENDENT_SENSORS = [radar_2.default.SENSOR_NAME];
+    Tom.DEPENDENT_SENSORS = [radar_3.default.SENSOR_NAME];
 });
-define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], function (require, exports, env_1, radar_3, tom_1) {
+define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], function (require, exports, env_1, radar_4, tom_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GAWorkFlow {
@@ -770,25 +795,31 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
             });
             return bestCar;
         }
-        ExecuteStrategicPlan() {
+        ExecuteStrategicPlan(options) {
             var halfNum = this.cars.length / 2;
-            for (var i = 0; i < halfNum; i++) {
-                var driverA = this.cars[i].driver;
-                var driverB = this.cars[i + halfNum].driver;
-                if (driverA instanceof tom_1.default &&
-                    driverB instanceof tom_1.default) {
-                    var brainA = driverA.brain;
-                    var brianB = driverB.brain;
-                    var newBrain = brainA.Chiasma(brianB);
-                    driverB.brain = newBrain;
+            var chiasmaFlag = options.get(GAWorkFlow.CHIASMA_CONTROL);
+            if (chiasmaFlag != null && chiasmaFlag) {
+                for (var i = 0; i < halfNum; i++) {
+                    var driverA = this.cars[i].driver;
+                    var driverB = this.cars[i + halfNum].driver;
+                    if (driverA instanceof tom_1.default &&
+                        driverB instanceof tom_1.default) {
+                        var brainA = driverA.brain;
+                        var brianB = driverB.brain;
+                        var newBrain = brainA.Chiasma(brianB);
+                        driverB.brain = newBrain;
+                    }
                 }
             }
-            for (var i = 0; i < this.cars.length; i++) {
-                var driver = this.cars[i].driver;
-                if (driver instanceof tom_1.default) {
-                    var brain = driver.brain;
-                    if (Math.random() > 0.5) {
-                        brain.Mutate();
+            var mutateFlag = options.get(GAWorkFlow.MUTATE_CONTROL);
+            if (mutateFlag != null && chiasmaFlag) {
+                for (var i = 0; i < this.cars.length; i++) {
+                    var driver = this.cars[i].driver;
+                    if (driver instanceof tom_1.default) {
+                        var brain = driver.brain;
+                        if (Math.random() > 0.5) {
+                            brain.Mutate();
+                        }
                     }
                 }
             }
@@ -798,21 +829,23 @@ define("workflow", ["require", "exports", "core/env", "tom/radar", "tom/tom"], f
         }
     }
     exports.default = GAWorkFlow;
-    GAWorkFlow.LAND = radar_3.default.DETECTABLE_RESOURCE_NAME;
+    GAWorkFlow.LAND = radar_4.default.DETECTABLE_RESOURCE_NAME;
+    GAWorkFlow.MUTATE_CONTROL = "MUTATE";
+    GAWorkFlow.CHIASMA_CONTROL = "CHIASMA";
 });
-define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar", "tom/tom", "workflow"], function (require, exports, brain_1, fertari_1, radar_4, tom_2, workflow_1) {
+define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar", "tom/tom", "workflow"], function (require, exports, brain_1, fertari_1, radar_5, tom_2, workflow_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.GetGAWorkFlow = void 0;
     function GetTomCar(id, locationX, locationY, velocityX, velocityY) {
         // init brain
         var tomBrain = new brain_1.default();
-        tomBrain.InitBrain(radar_4.DEFAULT_RADAR_INSTANCE.scanLine, 10, 3);
+        tomBrain.InitBrain(radar_5.DEFAULT_RADAR_INSTANCE.scanLine, 10, 3);
         // init driver
         var tomDriver = new tom_2.default(tomBrain);
         // init car
         var tomCar = new fertari_1.default(id, tomDriver, 5, locationX, locationY, velocityX, velocityY, Math.PI / 6);
-        tomCar.SetSensorUseDefaultName(radar_4.DEFAULT_RADAR_INSTANCE);
+        tomCar.SetSensorUseDefaultName(radar_5.DEFAULT_RADAR_INSTANCE);
         return {
             car: tomCar,
             driver: tomDriver,
@@ -831,7 +864,7 @@ define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar"
     }
     exports.GetGAWorkFlow = GetGAWorkFlow;
 });
-define("tomcar", ["require", "exports"], function (require, exports) {
+define("tomcar", ["require", "exports", "workflow"], function (require, exports, workflow_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class TomcarController {
@@ -839,6 +872,9 @@ define("tomcar", ["require", "exports"], function (require, exports) {
             this.runFlag = true;
             this.pauseFlag = false;
             this.workflow = workflow;
+            this.options = new Map();
+            this.options.set(workflow_2.default.MUTATE_CONTROL, true);
+            this.options.set(workflow_2.default.CHIASMA_CONTROL, true);
         }
         Begin() {
             this.workflow.Init();
@@ -866,7 +902,7 @@ define("tomcar", ["require", "exports"], function (require, exports) {
                         }
                         yield sleep(10);
                     }
-                    this.workflow.ExecuteStrategicPlan();
+                    this.workflow.ExecuteStrategicPlan(this.options);
                     this.workflow.ReStart();
                 }
             });

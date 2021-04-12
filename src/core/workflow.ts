@@ -14,7 +14,7 @@ export default interface WorkFlow {
 
     GetBestCar(): Car;
 
-    ExecuteStrategicPlan(): void;
+    ExecuteStrategicPlan(options:Map<String,Object>): void;
 
     ReStart(): void;
 

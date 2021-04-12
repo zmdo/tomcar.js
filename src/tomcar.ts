@@ -1,13 +1,18 @@
 import WorkFlow from "./core/workflow";
+import GAWorkFlow from "./workflow";
 
 export default class TomcarController {
 
     workflow:WorkFlow;
     runFlag:boolean = true;
     pauseFlag:boolean = false;
+    options:Map<String,Object>;
 
     constructor(workflow:WorkFlow){
         this.workflow = workflow;
+        this.options = new Map();
+        this.options.set(GAWorkFlow.MUTATE_CONTROL,true);
+        this.options.set(GAWorkFlow.CHIASMA_CONTROL,true);
     }
 
     public Begin():void {
@@ -31,6 +36,7 @@ export default class TomcarController {
     }
 
     private async TaskRun() {
+
         while(this.runFlag) {
             while((!this.workflow.IsEnd()) && this.runFlag) {
                 if (!this.pauseFlag) {
@@ -39,7 +45,7 @@ export default class TomcarController {
                 }
                 await sleep(10);
             }
-            this.workflow.ExecuteStrategicPlan();
+            this.workflow.ExecuteStrategicPlan(this.options);
             this.workflow.ReStart();
         }
     }

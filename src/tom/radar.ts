@@ -13,10 +13,11 @@ export default class Radar extends SensorBase {
 
         for(var i:number = 0 ; i < lineBlocks.length ; i ++) {
             if(lineBlocks[i] > 0) {
-                return i/lineBlocks.length;
+                return (i*1.0)/lineBlocks.length;
             }
         }
         return 1.0;
+
     }
 
     public GetName(): string {

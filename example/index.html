@@ -7,7 +7,7 @@
         <script type="text/javascript" src="./js/vue.min.js"></script>
         <script type="text/javascript" src="./js/require.js"></script>
         <script type="text/javascript" src="./js/map.js"></script>
-        <script type="text/javascript" src="./js/tomcar.js"></script>
+        <script type="text/javascript" src="../target/tomcar.js"></script>
 
         <script type="text/javascript">
 
@@ -94,7 +94,7 @@
         <div id = "ranking-list" height="500" width="200">
             <ol>
                 <li v-for="car in cars">
-                    {{car.id}}:{{car.mileage}}
+                    {{car.id}};{{Math.floor(car.locationX)}},{{Math.floor(car.locationY)}};{{car.mileage}}
                 </li>
               </ol>
         </div>
@@ -143,10 +143,10 @@
 
             // 构建控制器
             var controller;
+            var workflow;
             require(['vue','tomcar','factory'],function(Vue,TomcarController,factory){
-                
                 // 创建控制器
-                var workflow = factory.GetGAWorkFlow(canvas,Number(data.total),Number(data.car_x),Number(data.car_y),10,0);
+                workflow = factory.GetGAWorkFlow(canvas,Number(data.total),Number(data.car_x),Number(data.car_y),10,0);
                 controller = new TomcarController.default(workflow);
 
                 // 设置列表
@@ -156,12 +156,22 @@
                         'cars':workflow.cars,
                     },
                 });
-
             });
 
             // 运行按钮
             function TomcarRun() {
 
+                require(['workflow'],function(GAWorkFlow){
+                    if (options.lock) {
+                        controller.options.set(GAWorkFlow.default.MUTATE_CONTROL,false);
+                        controller.options.set(GAWorkFlow.default.CHIASMA_CONTROL,false);
+                    } else {
+                        controller.options.set(GAWorkFlow.default.MUTATE_CONTROL,options.mutate);
+                        controller.options.set(GAWorkFlow.default.CHIASMA_CONTROL,options.chiasma);
+                    }
+                });
+
+                // 开始
                 controller.Begin();
 
                 // 按钮管理  
