@@ -57,18 +57,18 @@
                 // 绘制默认地图
                 DrawDefaultMap(mainCanvas);
             }
-           </script>
+
+        </script>
 
     </head>
     <body>
         
         <div id = "buttons">
-            <button id = "run-button" onclick="TomcarRun()">开始</button>
-            <button id = "pause-button" onclick="">暂停</button>
-            <button id = "stop-button" onclick="">停止</button>
+            <button id = "run-button" onclick="TomcarRun()">启动</button>
+            <button id = "pause-button" onclick="Pause()">暂停</button>
+            <button id = "stop-button" onclick="Stop()">停止</button>
             <button id = "clear-button" onclick="ClearMap()">清理地图</button>
-            <button id = "load-map-button" onclick="">加载地图</button>
-            <button id = "reset-button" onclick="">重置</button>
+            <button id = "reset-button" onclick="Reset()">重置</button>
         </div>
 
         <div id = "options">
@@ -111,26 +111,42 @@
                     el: '#car-starting-point',
                     data: data,
                 });
+
             });
 
             // 获取canvas 
-            var canvas=document.getElementById('main-canvas');
+            var canvas = document.getElementById('main-canvas');
+            var gd = canvas.getContext('2d');
+
+            // 按钮
             var runButtton = document.getElementById("run-button");
             var clearButtton = document.getElementById("clear-button");
+            var pauseButtton = document.getElementById("pause-button");
+            var stopButtton = document.getElementById("stop-button");
+
+            pauseButtton.disabled = true;
+            stopButtton.disabled = true;
+
+            // 构建控制器
+            var controller;
+            require(['tomcar','factory'],function(TomcarController,factory){
+                var workflow = factory.GetGAWorkFlow(canvas,Number(data.total),Number(data.car_x),Number(data.car_y),10,0);
+                controller = new TomcarController.default(workflow);
+            });
 
             // 运行按钮
             function TomcarRun() {
 
-                require(['tomcar','factory'],function(tomcar,factory){
-                    var workflow = factory.GetGAWorkFlow(canvas,Number(options.total),Number(options.car_x),Number(options.car_y),10,0);
-                    tomcar.TomCarStart(workflow);
-                });
-                
-            
+                controller.Begin();
+
+                // 按钮管理  
                 runButtton.disabled = true;
                 clearButtton.disabled = true;
+                pauseButtton.disabled = false;
+                stopButtton.disabled = false;
 
-                var carStartingPoint =document.getElementById('car-starting-point');
+                // 出发点
+                var carStartingPoint = document.getElementById('car-starting-point');
                 carStartingPoint.hidden = true;
 
             }
@@ -138,6 +154,42 @@
             function ClearMap() {
                 var gd = canvas.getContext('2d');
                 gd.clearRect(0,0,canvas.width,canvas.height);
+            }
+
+            function Pause() {
+                if(!controller.pauseFlag) {
+                    controller.Pause();
+                    pauseButtton.innerText = "开始";
+                } else {
+                    controller.Start();
+                    pauseButtton.innerText = "暂停";
+                }
+            }
+
+            function Stop() {
+
+                controller.Stop();
+
+                // 清理全图
+                gd.clearRect(0,0,500,500);
+
+                // 绘制默认地图
+                DrawDefaultMap(canvas);
+                
+                // 按钮管理                
+                runButtton.disabled = false;
+                clearButtton.disabled = false;
+                pauseButtton.disabled = true;
+                pauseButtton.innerText = "暂停";
+                stopButtton.disabled = true;
+                
+                // 出发点
+                var carStartingPoint = document.getElementById('car-starting-point');
+                carStartingPoint.hidden = false;
+            }
+
+            function Reset() {
+                location.reload();
             }
         </script>
 
