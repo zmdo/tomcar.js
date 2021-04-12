@@ -18,7 +18,7 @@ import Sensor from "./sensor";
  */
 export default class Car {
 
-    id:number = 0;
+    id:number;
     driver!: Driver;
     environment!: Environment;
     mileage:number;
@@ -33,10 +33,11 @@ export default class Car {
     private recordCar!: Car;
     private turn!:number;
 
-    constructor(driver:Driver | null,x:number,y:number,vx:number,vy:number,turnRadian:number) {
+    constructor(id:number,driver:Driver | null,x:number,y:number,vx:number,vy:number,turnRadian:number) {
         if(driver != null) {
             this.SetDriver(driver);
         }
+        this.id = id;
         this.SetLocation(x,y);
         this.SetVelocity(vx,vy);
         this.turnRadian = turnRadian;
@@ -158,7 +159,7 @@ export default class Car {
      */
     public Record(): void{
         if (this.recordCar == null) {
-            this.recordCar = new Car(null,0,0,0,0,0);
+            this.recordCar = new Car(this.id,null,0,0,0,0,0);
         }
         Object.assign(this.recordCar,this);
     }

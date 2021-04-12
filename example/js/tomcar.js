@@ -174,11 +174,11 @@ define("core/car", ["require", "exports"], function (require, exports) {
      *
      */
     class Car {
-        constructor(driver, x, y, vx, vy, turnRadian) {
-            this.id = 0;
+        constructor(id, driver, x, y, vx, vy, turnRadian) {
             if (driver != null) {
                 this.SetDriver(driver);
             }
+            this.id = id;
             this.SetLocation(x, y);
             this.SetVelocity(vx, vy);
             this.turnRadian = turnRadian;
@@ -288,7 +288,7 @@ define("core/car", ["require", "exports"], function (require, exports) {
          */
         Record() {
             if (this.recordCar == null) {
-                this.recordCar = new Car(null, 0, 0, 0, 0, 0);
+                this.recordCar = new Car(this.id, null, 0, 0, 0, 0, 0);
             }
             Object.assign(this.recordCar, this);
         }
@@ -568,8 +568,8 @@ define("tom/fertari", ["require", "exports", "core/car"], function (require, exp
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Fertari extends car_1.default {
-        constructor(driver, radius, x, y, vx, vy, turnRadian) {
-            super(driver, x, y, vx, vy, turnRadian);
+        constructor(id, driver, radius, x, y, vx, vy, turnRadian) {
+            super(id, driver, x, y, vx, vy, turnRadian);
             this.radius = radius;
         }
         GetRadius() {
@@ -804,14 +804,14 @@ define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar"
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.GetGAWorkFlow = void 0;
-    function GetTomCar(locationX, locationY, velocityX, velocityY) {
+    function GetTomCar(id, locationX, locationY, velocityX, velocityY) {
         // init brain
         var tomBrain = new brain_1.default();
         tomBrain.InitBrain(radar_4.DEFAULT_RADAR_INSTANCE.scanLine, 10, 3);
         // init driver
         var tomDriver = new tom_2.default(tomBrain);
         // init car
-        var tomCar = new fertari_1.default(tomDriver, 5, locationX, locationY, velocityX, velocityY, Math.PI / 6);
+        var tomCar = new fertari_1.default(id, tomDriver, 5, locationX, locationY, velocityX, velocityY, Math.PI / 6);
         tomCar.SetSensorUseDefaultName(radar_4.DEFAULT_RADAR_INSTANCE);
         return {
             car: tomCar,
@@ -821,10 +821,10 @@ define("factory", ["require", "exports", "tom/brain", "tom/fertari", "tom/radar"
     }
     exports.default = GetTomCar;
     function GetGAWorkFlow(canvas, n, locationX, locationY, velocityX, velocityY) {
-        var prototypeCar = GetTomCar(locationX, locationY, velocityX, velocityY).car;
+        var prototypeCar = GetTomCar(0, locationX, locationY, velocityX, velocityY).car;
         var cars = new Array(n);
         for (var i = 0; i < n; i++) {
-            cars[i] = GetTomCar(locationX, locationY, velocityX, velocityY).car;
+            cars[i] = GetTomCar(i, locationX, locationY, velocityX, velocityY).car;
         }
         var workflow = new workflow_1.default(canvas, prototypeCar, cars);
         return workflow;

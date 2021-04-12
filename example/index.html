@@ -86,7 +86,11 @@
         </div>
 
         <div id = "ranking-list" height="500" width="200">
-
+            <ol>
+                <li v-for="car in cars">
+                    {{car.id}}
+                </li>
+              </ol>
         </div>
 
         <script type="text/javascript">
@@ -129,9 +133,17 @@
 
             // 构建控制器
             var controller;
-            require(['tomcar','factory'],function(TomcarController,factory){
+            require(['vue','tomcar','factory'],function(Vue,TomcarController,factory){
+                // 创建控制器
                 var workflow = factory.GetGAWorkFlow(canvas,Number(data.total),Number(data.car_x),Number(data.car_y),10,0);
                 controller = new TomcarController.default(workflow);
+                // 设置列表
+                new Vue({
+                    el: '#ranking-list',
+                    data: {
+                        'cars':workflow.OrderdCars(),
+                    },
+                });
             });
 
             // 运行按钮

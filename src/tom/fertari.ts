@@ -8,8 +8,8 @@ export default class Fertari extends Car implements Drawable,RigidBody{
     // collision volume
     private radius:number;
 
-    constructor(driver:Driver,radius:number,x:number,y:number,vx:number,vy:number,turnRadian:number) {
-        super(driver,x,y,vx,vy,turnRadian);
+    constructor(id:number,driver:Driver,radius:number,x:number,y:number,vx:number,vy:number,turnRadian:number) {
+        super(id,driver,x,y,vx,vy,turnRadian);
         this.radius = radius;
     }
 
