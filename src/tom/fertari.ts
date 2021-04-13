@@ -34,42 +34,45 @@ export default class Fertari extends Car implements Drawable,RigidBody{
     public Draw(canvas: HTMLCanvasElement): void {
         var c2d:CanvasRenderingContext2D|null = canvas.getContext("2d");
         if (c2d != null) {
+            if(this.IsAlive()) {
+                // 绘制传感器数据
+                var radarData:number[] = this.GetScanResultBy(Radar.SENSOR_NAME);
 
-            // 绘制传感器数据
-            var radarData:number[] = this.GetScanResultBy(Radar.SENSOR_NAME);
+                if (radarData != null) {
 
-            if (radarData != null) {
+                    // 获取雷达
+                    var radar:Radar = <Radar> (this.sensors.get(Radar.SENSOR_NAME));
+                    var visualField:number = radar.visualField;
+                    var scanLine:number = radar.scanLine;
+                    
+                    // 角度
+                    var cos:number,sin:number ;
+                    var dAngle = visualField / scanLine ;
+                    var angle = this.GetCurrentDirection() - visualField/2 ;
+                    
+                    c2d.strokeStyle="green";
+                    for (var i:number = 0 ; i < radarData.length ; i ++) {
+                        // 绘制起点
+                        c2d.beginPath();
+                        c2d.moveTo(this.locationX,this.locationY);
 
-                // 获取雷达
-                var radar:Radar = <Radar> (this.sensors.get(Radar.SENSOR_NAME));
-                var visualField:number = radar.visualField;
-                var scanLine:number = radar.scanLine;
-                
-                // 角度
-                var cos:number,sin:number ;
-                var dAngle = visualField / scanLine ;
-                var angle = this.GetCurrentDirection() - visualField/2 ;
-                
-                c2d.strokeStyle="green";
-                for (var i:number = 0 ; i < radarData.length ; i ++) {
-                    // 绘制起点
-                    c2d.beginPath();
-                    c2d.moveTo(this.locationX,this.locationY);
+                        // 绘制终点
+                        let visualLen:number = radar.detectionRange*radarData[i];
+                        sin = Math.sin(angle);
+                        cos = Math.cos(angle);
+                        c2d.lineTo(this.locationX +  Math.floor(cos*visualLen),this.locationY + Math.floor(sin*visualLen));
+                        angle += dAngle;
 
-                    // 绘制终点
-                    let visualLen:number = radar.detectionRange*radarData[i];
-                    sin = Math.sin(angle);
-                    cos = Math.cos(angle);
-                    c2d.lineTo(this.locationX +  Math.floor(cos*visualLen),this.locationY + Math.floor(sin*visualLen));
-                    angle += dAngle;
-
-                    // 绘制扫描线
-                    c2d.stroke();
+                        // 绘制扫描线
+                        c2d.stroke();
+                    }
                 }
+                c2d.fillStyle="blue";
+            } else {
+                c2d.fillStyle="red";
             }
 
             // 绘制车主体
-            c2d.strokeStyle="blue";
             c2d.beginPath();
             c2d.arc(this.GetX(), this.GetY(), this.GetRadius(), 0, 2*Math.PI, false);
             c2d.fill();

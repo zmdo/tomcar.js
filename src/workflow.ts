@@ -125,11 +125,6 @@ export default class GAWorkFlow implements WorkFlow {
         // draw cars
         this.cars.forEach(car => {
             if (c2d == null) return ;
-            if(car.IsAlive()) {
-                c2d.fillStyle="blue";
-            } else {
-                c2d.fillStyle="red";
-            }
             car.Draw(this.canvas);
         });
 
