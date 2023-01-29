@@ -5,7 +5,7 @@
 
 ## 网页示例
 网页示例：example/index.html 
-在线体验: https://zmdo.github.io/tomcar/
+在线体验: https://zmdo.cn/tomcar/
 
 ![tomcar website demo](doc/web.gif)
 
