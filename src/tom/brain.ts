@@ -11,7 +11,7 @@ export default class TomBrain implements Gene,Brain {
     chiasmaRate:number = 0.5;
 
     private inputData:Map<string,number[]> = new Map();
-    private tempOutput:number[] = new Array();
+    private tempOutput:number[] = [];
 
     /**
      * Randomly generate network data.

@@ -22,7 +22,7 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
         return this.powers.length;
     }
 
-    public Input(data:number[]): number[]{
+    public Input(data:number[]) : number[] {
         let output!:number[];
         let input:number[] = data;
 
@@ -40,8 +40,15 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
         }
         return output;
     }
-    
-    protected abstract ActivationFunction(len:number,sum:number,bias:number): number;
+
+    /**
+     * activation function
+     * @param len number of neurons
+     * @param sum sum of output of upper neural network
+     * @param bias neuron bias
+     */
+    protected abstract ActivationFunction(len:number,sum:number,bias:number) : number;
+
 }
 
 /**
@@ -53,7 +60,6 @@ export class DefaultNeuralNetwork extends NeuralNetworkBase {
         super(powers,bias);
     }
 
-    // 
     protected ActivationFunction(len:number,sum: number, bias: number): number {
         let value:number = (sum + bias)/len;
         if (value > 0) {

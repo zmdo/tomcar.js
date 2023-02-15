@@ -5,7 +5,7 @@ import { DEFAULT_RADAR_INSTANCE } from "./tom/radar";
 import Tom from "./tom/tom";
 import GAWorkFlow from "./workflow";
 
-export default function GetTomCar(id:number,locationX:number,locationY:number,velocityX:number,velocityY:number):{car:Fertari,driver:Tom,brain:TomBrain} {
+export default function GetTomCar(id:number,locationX:number,locationY:number,velocityX:number,velocityY:number) : {car:Fertari,driver:Tom,brain:TomBrain} {
 
     // init brain
     let tomBrain:TomBrain = new TomBrain();
@@ -26,7 +26,17 @@ export default function GetTomCar(id:number,locationX:number,locationY:number,ve
     
 }
 
-export function GetGAWorkFlow(canvas:HTMLCanvasElement,n:number,locationX:number,locationY:number,velocityX:number,velocityY:number): WorkFlow{
+/**
+ * Get a Genetic Algorithm Workflow
+ * @param canvas target canvas
+ * @param n number of cars
+ * @param locationX start point x coordinate
+ * @param locationY start point y coordinate
+ * @param velocityX the size of the starting velocity vector in the X direction
+ * @param velocityY the size of the starting velocity vector in the y direction
+ * @returns Genetic Algorithm Workflow
+ */
+export function GetGAWorkFlow(canvas:HTMLCanvasElement,n:number,locationX:number,locationY:number,velocityX:number,velocityY:number) : WorkFlow{
     let prototypeCar:Fertari = GetTomCar(0,locationX,locationY,velocityX,velocityY).car;
     let cars:Fertari[] = new Array(n);
     for (let i=0 ; i < n; i++) {

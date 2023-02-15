@@ -1,8 +1,22 @@
 export default interface NeuralNetwork {
 
-    GetLayer(index:number): {size:number,power:number[][],bias:number[]};
+    /**
+     * get a layer of neurons
+     * @param index layer index
+     * @returns layer data
+     */
+    GetLayer(index:number) : {size:number,power:number[][],bias:number[]};
 
-    NumberOfLayers(): number;
+    /**
+     * total number of layers
+     * @returns total number of layers
+     */
+    NumberOfLayers() : number;
 
-    Input(data:number[]): number[];
+    /**
+     * Input data to the neural network
+     * @param data input data
+     */
+    Input(data:number[]) : number[];
+
 }

@@ -13,7 +13,7 @@ export default class Radar extends SensorBase {
 
         for(let i:number = 0 ; i < lineBlocks.length ; i ++) {
             if(lineBlocks[i] > 0) {
-                return (i*1.0)/lineBlocks.length;
+                return i/lineBlocks.length;
             }
         }
         return 1.0;

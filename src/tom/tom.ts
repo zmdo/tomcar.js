@@ -16,7 +16,7 @@ export default class Tom extends Driver {
     protected Operate(out: number[], car:Car): void {
 
         // get best result
-        var result = Tom.BestChoice(out);
+        let result = Tom.BestChoice(out);
         
         // toggle direction
         switch(result) {
@@ -38,9 +38,9 @@ export default class Tom extends Driver {
     }
 
     private static BestChoice(data : number[]): number {
-        var maxIndex = 0;
-        var max = data[0];
-        for (var i = 0 ; i < data.length ; i ++ ) {
+        let maxIndex = 0;
+        let max = data[0];
+        for (let i = 0 ; i < data.length ; i ++ ) {
             if (data[i] > max) {
                 max = data[i];
                 maxIndex = i;
