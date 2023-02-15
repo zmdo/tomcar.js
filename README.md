@@ -16,15 +16,15 @@
 
 ## 项目结构
 
-- doc : 项目文档及图片
-- example : 项目打包后的案例
-- src : 项目源码
-  - core : 核心组件与接口定义
-  - ga : 基因算法（Genetic Algorithm）接口定义
-  - graphics : 图像绘制接口定义
-  - physics : 物理接口定义
-  - tom : 实际的接口实现
-- tool : 项目工具
+- **doc :** 项目文档及图片
+- **example :** 项目打包后的案例
+- **src :** 项目源码
+  - **core :** 核心组件与接口定义
+  - **ga :** 基因算法（Genetic Algorithm）接口定义
+  - **graphics :** 图像绘制接口定义
+  - **physics :** 物理接口定义
+  - **tom :** 实际的接口实现
+- **tool :** 项目工具
 
 ## 项目工具使用
 

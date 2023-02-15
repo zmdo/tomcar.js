@@ -16,15 +16,15 @@ If you want to test the maturity of the current Tom car training, you can first 
 
 ## Project structure
 
-- doc : Project documents and images
-- example : The case after the project is packaged
-- src : Project source
-    - core : core components and interfaces
-    - ga : Genetic Algorithm interfaces
-    - graphics : Image drawing interfaces
-    - physics : Physics interfaces 
-    - tom : Actual interface implementation
-- tool : Project tool
+- **doc :** Project documents and images
+- **example :** The case after the project is packaged
+- **src :** Project source
+    - **core :** core components and interfaces
+    - **ga :** Genetic Algorithm interfaces
+    - **graphics :** Image drawing interfaces
+    - **physics :** Physics interfaces 
+    - **tom :** Actual interface implementation
+- **tool :** Project tool
 
 ## How to use the project tool
 
