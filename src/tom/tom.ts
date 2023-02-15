@@ -13,7 +13,7 @@ export default class Tom extends Driver {
         super(brain);
     }
 
-    protected Opeate(out: number[],car:Car): void {
+    protected Operate(out: number[], car:Car): void {
 
         // get best result
         var result = Tom.BestChoice(out);

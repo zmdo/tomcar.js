@@ -20,7 +20,7 @@ export default class Environment {
      * @returns 
      */
     public GetResource(name:string,x:number,y:number): number {
-        var resource = this.GetAllResourcesByName(name);
+        let resource = this.GetAllResourcesByName(name);
         return resource[y*this.width + x];
     }
 
@@ -30,7 +30,7 @@ export default class Environment {
      * @returns resource data 
      */
     public GetAllResources(name:string): number[]{
-        var resource = this.GetAllResourcesByName(name);
+        let resource = this.GetAllResourcesByName(name);
         // copy data
         // var resourceCopy : number[] = new Array(resource.length);
         // Object.assign(resourceCopy,resource);
@@ -45,7 +45,7 @@ export default class Environment {
      * @param y location y
      */
     public SetResource(name:string,data:number,x:number,y:number): void{
-        var resource = this.GetAllResourcesByName(name);
+        let resource = this.GetAllResourcesByName(name);
         resource[y*this.width + x] = data; 
     }
 
@@ -65,7 +65,7 @@ export default class Environment {
      * @returns resource data pointer
      */
     private GetAllResourcesByName(name:string): number[]{
-        var resource = this.resources.get(name);
+        let resource = this.resources.get(name);
         if (resource == null) {
             throw new Error("resource not found : " + name);
         }

@@ -5,7 +5,7 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
     powers:number[][][];
     bias:number[][];
 
-    constructor(powers:number[][][],bias:number[][]) {
+    protected constructor(powers:number[][][], bias:number[][]) {
         this.powers = powers;
         this.bias = bias;
     }
@@ -23,15 +23,15 @@ export default abstract class NeuralNetworkBase implements NeuralNetwork {
     }
 
     public Input(data:number[]): number[]{
-        var output!:number[];
-        var input:number[] = data;
+        let output!:number[];
+        let input:number[] = data;
 
-        for(var i:number = 0 ; i < this.NumberOfLayers() ; i ++) {
-            var layer = this.GetLayer(i);
+        for(let i:number = 0 ; i < this.NumberOfLayers() ; i ++) {
+            let layer = this.GetLayer(i);
             output = new Array(layer.size);
-            for(var j:number = 0; j < layer.size ; j ++) {
-                var sum:number = 0;
-                for(var k:number = 0; k < layer.power[j].length ; k ++) {
+            for(let j:number = 0; j < layer.size ; j ++) {
+                let sum:number = 0;
+                for(let k:number = 0; k < layer.power[j].length ; k ++) {
                     sum += layer.power[j][k]*input[k];
                 }
                 output[j] = this.ActivationFunction(layer.power[j].length,sum,layer.bias[j]);
@@ -55,7 +55,7 @@ export class DefaultNeuralNetwork extends NeuralNetworkBase {
 
     // 
     protected ActivationFunction(len:number,sum: number, bias: number): number {
-        var value:number = (sum + bias)/len;
+        let value:number = (sum + bias)/len;
         if (value > 0) {
             return value;
         } else {

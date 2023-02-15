@@ -18,15 +18,30 @@ import Sensor from "./sensor";
  */
 export default class Car {
 
+    // Unique identifier
     id:number;
+    // car driver
     driver!: Driver;
+    // The current environment in which the car is located
     environment!: Environment;
+    // distance traveled
     mileage:number;
+
+    // +----------------------------+
+    //  Current location coordinates
+    // +----------------------------+
     locationX!:number;
     locationY!:number;
+
+    // +-----------------------+
+    //  Current velocity vector
+    // +-----------------------+
     velocityY!:number;
     velocityX!:number;
+
+    // velocity = sqrt(velocityX*velocityX + velocityY*velocityY)
     velocity !:number;
+
     turnRadian:number;
     sensors:Map<string,Sensor>;
     alive!:boolean;
@@ -75,27 +90,31 @@ export default class Car {
         this.turn = 2;
     }
 
+    /**
+     * Take the current angle as the base to turn by dRadian
+     * @param dRadian Angle of deviation
+     */
     private Turn(dRadian:number): void{
 
         // get new direction
-		var direction = this.GetCurrentDirection() + dRadian;
+		let direction = this.GetCurrentDirection() + dRadian;
 		
         // compute new velocity 
-		var vx = this.velocity*Math.cos(direction);
-		var vy = this.velocity*Math.sin(direction);
+		let vx = this.velocity*Math.cos(direction);
+		let vy = this.velocity*Math.sin(direction);
 		
 		this.SetVelocity(vx,vy);
     }
 
     /**
-     * 
+     * Get the scan result of the sensor
      * @param name sensor name
-     * @returns 
+     * @returns scan result data array
      */
     public GetScanResultBy(name:string): number[] {
-        var sensor = this.sensors.get(name);
+        let sensor = this.sensors.get(name);
         if (sensor != null) {
-            var direction = this.GetCurrentDirection();
+            let direction = this.GetCurrentDirection();
             return sensor.Scan(this.environment,this.locationX,this.locationY,direction);
         } else {
             throw new Error("sensor not found :" + name);
@@ -108,11 +127,11 @@ export default class Car {
      */
     public GetCurrentDirection(): number{
         // compute sin and cos
-        var sin = this.velocityY/this.velocity;
-        var cos = this.velocityX/this.velocity;
+        let sin = this.velocityY/this.velocity;
+        let cos = this.velocityX/this.velocity;
         
         // compute direction
-        var direction = Math.acos(cos);
+        let direction = Math.acos(cos);
         
         // identify quadrants
         if(sin < 0) {
@@ -132,7 +151,8 @@ export default class Car {
     }
 
     /**
-     * 
+     * Set the car sensor, and use the default name of
+     * the sensor object to identify the sensor
      * @param sensor sensor object
      */
     public SetSensorUseDefaultName(sensor:Sensor): void{

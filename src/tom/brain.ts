@@ -25,22 +25,22 @@ export default class TomBrain implements Gene,Brain {
      */
     public InitBrain(...layers: number[]) {
 
-        var powers : number[][][];
-        var bias : number[][];
-        var t:number;
-        var sign:number;
+        let powers : number[][][];
+        let bias : number[][];
+        let t:number;
+        let sign:number;
 
         powers = new Array(layers.length-1);
         bias = new Array(layers.length-1);
 
-        for(var i:number = 1; i < layers.length ; i++ ) {
+        for(let i:number = 1; i < layers.length ; i++ ) {
             t = i-1;
             powers[t] = new Array(layers[i]);
             bias[t] = new Array(layers[i]);
             
-            for (var j:number = 0 ; j < layers[i]; j ++ ) {
+            for (let j:number = 0 ; j < layers[i]; j ++ ) {
                 powers[t][j] = new Array(layers[i - 1]);
-                for (var k:number = 0 ; k < layers[i - 1] ; k ++) {
+                for (let k:number = 0 ; k < layers[i - 1] ; k ++) {
                     sign = Math.random() < 0.5 ? 1:-1;
                     powers[t][j][k] = Math.random()*sign;
                 }
@@ -56,11 +56,11 @@ export default class TomBrain implements Gene,Brain {
      * Make neurons mutate by mutatedRate
      */
     public Mutate(): void {
-        var sign:number;
-        for (var i:number = 0 ; i < this.net.NumberOfLayers() ; i ++ ) {
-            var layer = this.net.GetLayer(i);
-            for(var j:number = 0 ; j < layer.size ; j ++ ) {
-                for(var k = 0 ; k < layer.power[j].length ; k ++) {
+        let sign:number;
+        for (let i:number = 0 ; i < this.net.NumberOfLayers() ; i ++ ) {
+            let layer = this.net.GetLayer(i);
+            for(let j:number = 0 ; j < layer.size ; j ++ ) {
+                for(let k = 0 ; k < layer.power[j].length ; k ++) {
                     if(Math.random() < this.mutatedRate) {
                         sign = Math.random() < 0.5 ? 1:-1;
                         layer.power[j][k] = Math.random()*sign;
@@ -81,26 +81,26 @@ export default class TomBrain implements Gene,Brain {
      */
     public Chiasma(gene: TomBrain): TomBrain {
         
-        var powers : number[][][];
-        var bias : number[][];
+        let powers : number[][][];
+        let bias : number[][];
 
-        var nol:number = this.net.NumberOfLayers();
+        let nol:number = this.net.NumberOfLayers();
         powers = new Array(nol);
         bias = new Array(nol);
 
-        for (var i:number = 0 ; i < nol ; i ++ ) {
+        for (let i:number = 0 ; i < nol ; i ++ ) {
 
-            var fLayer = this.net.GetLayer(i);
-            var mLayer = gene.net.GetLayer(i);
+            let fLayer = this.net.GetLayer(i);
+            let mLayer = gene.net.GetLayer(i);
 
             powers[i] = new Array(fLayer.size);
             bias[i] = new Array(fLayer.size);
 
-            for(var j:number = 0 ; j < fLayer.size ; j ++ ) {
+            for(let j:number = 0 ; j < fLayer.size ; j ++ ) {
                 
                 powers[i][j] = new Array(fLayer.power[j].length);
 
-                for(var k = 0 ; k < fLayer.power[j].length ; k ++) {
+                for(let k = 0 ; k < fLayer.power[j].length ; k ++) {
                     if(Math.random() < this.chiasmaRate) {
                         powers[i][j][k] = fLayer.power[j][k];
                     } else {
@@ -117,7 +117,7 @@ export default class TomBrain implements Gene,Brain {
             }
         }
 
-        var son:TomBrain = new TomBrain();
+        let son:TomBrain = new TomBrain();
         son.mutatedRate = this.mutatedRate;
         son.chiasmaRate = this.chiasmaRate;
         son.net = new DefaultNeuralNetwork(powers, bias);
@@ -126,29 +126,29 @@ export default class TomBrain implements Gene,Brain {
     }
     
     public Copy(): Gene {
-        var powers : number[][][];
-        var bias : number[][];
+        let powers : number[][][];
+        let bias : number[][];
 
-        var nol:number = this.net.NumberOfLayers();
+        let nol:number = this.net.NumberOfLayers();
         powers = new Array(nol);
         bias = new Array(nol);
-        for (var i:number = 0 ; i < nol ; i ++ ) {
+        for (let i:number = 0 ; i < nol ; i ++ ) {
 
-            var layer = this.net.GetLayer(i);
+            let layer = this.net.GetLayer(i);
 
             powers[i] = new Array(layer.size);
             bias[i] = new Array(layer.size);
 
-            for(var j:number = 0 ; j < layer.size ; j ++ ) {
+            for(let j:number = 0 ; j < layer.size ; j ++ ) {
                 powers[i][j] = new Array(layer.power[j].length);
-                for(var k = 0 ; k < layer.power[j].length ; k ++) {
+                for(let k = 0 ; k < layer.power[j].length ; k ++) {
                     powers[i][j][k] = layer.power[j][k];
                 }
                 bias[i][j] = layer.bias[j];
             }
         }
 
-        var brainCopy:TomBrain = new TomBrain();
+        let brainCopy:TomBrain = new TomBrain();
         brainCopy.mutatedRate = this.mutatedRate;
         brainCopy.chiasmaRate = this.chiasmaRate;
         brainCopy.net = new DefaultNeuralNetwork(powers, bias);
@@ -162,7 +162,7 @@ export default class TomBrain implements Gene,Brain {
     }
     
     public Think(): void {
-        var radarInput = this.inputData.get(Radar.SENSOR_NAME);
+        let radarInput = this.inputData.get(Radar.SENSOR_NAME);
         if(radarInput != null) {
             this.tempOutput = this.net.Input(radarInput);
         }

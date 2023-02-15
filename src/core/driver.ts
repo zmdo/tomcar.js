@@ -2,13 +2,13 @@ import Car from "./car"
 import Brain from "./brain"
 
 /**
- * driver
+ * Driver
  */
 export default abstract class Driver {
     car!: Car;
     brain:Brain;
 
-    constructor(brain:Brain) {
+    protected constructor(brain:Brain) {
         this.brain = brain;
     }
 
@@ -38,12 +38,17 @@ export default abstract class Driver {
         // compute
         this.brain.Think();
 
-        // opeate
-        this.Opeate(this.brain.Output(),this.car);
+        // operate
+        this.Operate(this.brain.Output(),this.car);
 
     }
 
-    protected abstract Opeate(out:number[],car:Car): void;
+    /**
+     * Act on current perceived data
+     * @param out current data
+     * @param car current car
+     */
+    protected abstract Operate(out:number[], car:Car): void;
 
     public abstract DependentSensors(): string[];
 

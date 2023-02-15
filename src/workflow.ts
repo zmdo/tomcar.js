@@ -28,18 +28,18 @@ export default class GAWorkFlow implements WorkFlow {
     public Init(): void {
 
         // scan canvas
-        var c2d:CanvasRenderingContext2D|null = this.canvas.getContext("2d");
+        let c2d:CanvasRenderingContext2D|null = this.canvas.getContext("2d");
         if (c2d == null) return ;
         
-        var width = this.canvas.width;
-        var height = this.canvas.height;
+        let width = this.canvas.width;
+        let height = this.canvas.height;
 
-        var data:number[] = new Array(width*height);
-        var canvasData:ImageData =  c2d.getImageData(0,0,width,height);
-        var pos:number;
+        let data:number[] = new Array(width*height);
+        let canvasData:ImageData =  c2d.getImageData(0,0,width,height);
+        let pos:number;
 
-        for (var i:number = 0; i < width ; i ++) {
-            for (var j:number = 0 ; j < height; j ++) {
+        for (let i:number = 0; i < width ; i ++) {
+            for (let j:number = 0 ; j < height; j ++) {
                 pos = j*width*4 + i*4;
                 if(canvasData.data[pos] > 0){
                     data[j*width + i ] = 1;
@@ -88,8 +88,8 @@ export default class GAWorkFlow implements WorkFlow {
 
         // rule
         this.cars.forEach(car => {
-            var x:number = Math.floor(car.locationX);
-            var y:number = Math.floor(car.locationY);
+            let x:number = Math.floor(car.locationX);
+            let y:number = Math.floor(car.locationY);
             if(this.environment.GetResource(GAWorkFlow.LAND,x,y) > 0) {
                 car.alive = false;
             }
@@ -102,20 +102,20 @@ export default class GAWorkFlow implements WorkFlow {
 
     private Draw(): void {
 
-        var c2d:CanvasRenderingContext2D|null = this.canvas.getContext("2d");
+        let c2d:CanvasRenderingContext2D|null = this.canvas.getContext("2d");
         if (c2d == null) return ;
 
-        var width:number = this.environment.width;
-        var height:number = this.environment.height;
+        let width:number = this.environment.width;
+        let height:number = this.environment.height;
 
         // clear all 
         c2d.clearRect(0,0,width,height);
 
         // draw background
         c2d.fillStyle="black";
-        var lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
-        for(var i:number = 0; i < width ; i++ ) {
-            for(var j:number = 0; j < height ; j++ ) {
+        let lands:number[] = this.environment.GetAllResources(GAWorkFlow.LAND);
+        for(let i:number = 0; i < width ; i++ ) {
+            for(let j:number = 0; j < height ; j++ ) {
                 if(lands[j*width + i ] > 0) {
                     c2d.fillRect(i,j,1,1);
                 }
@@ -131,7 +131,7 @@ export default class GAWorkFlow implements WorkFlow {
     }
 
     public IsEnd(): boolean {
-        var flag:boolean = true
+        let flag:boolean = true
         this.cars.forEach(car => {
             if (car.IsAlive()) {
                 flag = false;
@@ -142,10 +142,10 @@ export default class GAWorkFlow implements WorkFlow {
     }
 
     public OrderdCars(): Car[] {
-        for (var i:number = 0 ; i < this.cars.length ; i ++ ) {
-            for (var j:number = i; j < this.cars.length ; j ++ ) {
+        for (let i:number = 0 ; i < this.cars.length ; i ++ ) {
+            for (let j:number = i; j < this.cars.length ; j ++ ) {
                 if(this.cars[j].mileage > this.cars[i].mileage) {
-                    var car:Fertari = this.cars[i];
+                    let car:Fertari = this.cars[i];
                     this.cars[i] = this.cars[j];
                     this.cars[j] = car;
                 } 
@@ -155,7 +155,7 @@ export default class GAWorkFlow implements WorkFlow {
     }
 
     public GetBestCar(): Car {
-        var bestCar:Car = this.cars[0];
+        let bestCar:Car = this.cars[0];
         this.cars.forEach(car => {
             if ( car.mileage > bestCar.mileage ) {
                 bestCar = car;
@@ -166,29 +166,29 @@ export default class GAWorkFlow implements WorkFlow {
 
     public ExecuteStrategicPlan(options:Map<String,Object>): void {
 
-        var len:number = this.cars.length;
+        let len:number = this.cars.length;
 
-        var chiasmaFlag = options.get(GAWorkFlow.CHIASMA_CONTROL);
+        let chiasmaFlag = options.get(GAWorkFlow.CHIASMA_CONTROL);
         if (chiasmaFlag != null && (<boolean> chiasmaFlag)) {
-            for(var i:number = 0; i < len ; i ++ ) {
-                var driverA:Driver = this.cars[0].driver;
-                var driverB:Driver = this.cars[i].driver;
+            for(let i:number = 0; i < len ; i ++ ) {
+                let driverA:Driver = this.cars[0].driver;
+                let driverB:Driver = this.cars[i].driver;
                 if (driverA instanceof Tom && 
                     driverB instanceof Tom) {
-                    var brainA:TomBrain = (<Tom> driverA).brain;
-                    var brianB:TomBrain = (<Tom> driverB).brain;
-                    var newBrain = brainA.Chiasma(brianB);
+                    let brainA:TomBrain = (<Tom> driverA).brain;
+                    let brianB:TomBrain = (<Tom> driverB).brain;
+                    let newBrain = brainA.Chiasma(brianB);
                     driverB.brain = newBrain;
                 }
             }
         }
 
-        var mutateFlag = options.get(GAWorkFlow.MUTATE_CONTROL);
+        let mutateFlag = options.get(GAWorkFlow.MUTATE_CONTROL);
         if (mutateFlag != null && (<boolean> chiasmaFlag)) {
-            for (var i:number = 0; i < this.cars.length ; i ++ ) {
-                var driver:Driver = this.cars[i].driver;
+            for (let i:number = 0; i < this.cars.length ; i ++ ) {
+                let driver:Driver = this.cars[i].driver;
                 if (driver instanceof Tom) {
-                    var brain:TomBrain = (<Tom> driver).brain;
+                    let brain:TomBrain = (<Tom> driver).brain;
                     if (Math.random() > 0.5) {
                         brain.Mutate();
                     }

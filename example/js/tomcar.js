@@ -42,7 +42,7 @@ define("core/driver", ["require", "exports"], function (require, exports) {
             // compute
             this.brain.Think();
             // opeate
-            this.Opeate(this.brain.Output(), this.car);
+            this.Operate(this.brain.Output(), this.car);
         }
     }
     exports.default = Driver;

@@ -36,29 +36,29 @@ export abstract class SensorBase implements Sensor {
     public Scan(env: Environment, x: number, y: number, direction: number): number[] {
 
         // get resources
-        var resources = env.GetAllResources(this.GetDetectableResourceName());
+        let resources = env.GetAllResources(this.GetDetectableResourceName());
 
-        var width = env.width;
-        var height = env.height;
+        let width = env.width;
+        let height = env.height;
 
-        var result:number[] = new Array(this.scanLine);
+        let result:number[] = new Array(this.scanLine);
 		
         // scan environment
-		var cos:number,sin:number ;
-		var dAngle = this.visualField / this.scanLine ;
-		var angle = direction - this.visualField/2 ;
+		let cos:number,sin:number ;
+		let dAngle = this.visualField / this.scanLine ;
+		let angle = direction - this.visualField/2 ;
         for ( var index = 0 ; index < this.scanLine ;  index ++) {
 
 			sin = Math.sin(angle);
 			cos = Math.cos(angle);
 			
 			// ger scan line 
-			var lineBlocks:number[] = new Array(this.detectionRange); 			
-			for (var len:number = 0 ; len < this.detectionRange ; len ++) { 
+			let lineBlocks:number[] = new Array(this.detectionRange);
+			for (let len = 0 ; len < this.detectionRange ; len ++) {
                 
-				var i:number = Math.floor(x + len*cos);
-				var j:number = Math.floor(y + len*sin);
-                var pos:number = Math.floor(j*width + i);
+				let i = Math.floor(x + len*cos);
+				let j = Math.floor(y + len*sin);
+                let pos = Math.floor(j*width + i);
 
 				lineBlocks[len] = resources[pos];
 				
