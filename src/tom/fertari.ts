@@ -1,7 +1,7 @@
 import Car from "../core/car";
 import Driver from "../core/driver";
 import Drawable from "../graphics/drawable";
-import RigidBody from "../physis/rigid_body";
+import RigidBody from "../physics/rigid_body";
 import Radar from "./radar";
 
 export default class Fertari extends Car implements Drawable,RigidBody {
@@ -54,18 +54,18 @@ export default class Fertari extends Car implements Drawable,RigidBody {
                     c2d.strokeStyle="green";
                     for (let i:number = 0 ; i < radarData.length ; i ++) {
 
-                        // 绘制起点
+                        // drawing start point
                         c2d.beginPath();
                         c2d.moveTo(this.locationX,this.locationY);
 
-                        // 绘制终点
+                        // drawing end point
                         let visualLen:number = radar.detectionRange*radarData[i];
                         sin = Math.sin(angle);
                         cos = Math.cos(angle);
                         c2d.lineTo(this.locationX +  Math.floor(cos*visualLen),this.locationY + Math.floor(sin*visualLen));
                         angle += dAngle;
 
-                        // 绘制扫描线
+                        // draw scanline
                         c2d.stroke();
                     }
                 }

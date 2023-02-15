@@ -76,8 +76,8 @@ export default class TomBrain implements Gene,Brain {
     
     /**
      * genes chiasma produces new gene (the original gene will not change)
-     * @param gene 
-     * @returns 
+     * @param gene
+     * @returns TomBrain object
      */
     public Chiasma(gene: TomBrain): TomBrain {
         
@@ -162,8 +162,8 @@ export default class TomBrain implements Gene,Brain {
     }
     
     public Think(): void {
-        let radarInput = this.inputData.get(Radar.SENSOR_NAME);
-        if(radarInput != null) {
+        if (this.inputData.has(Radar.SENSOR_NAME)) {
+            let radarInput = this.inputData.get(Radar.SENSOR_NAME);
             this.tempOutput = this.net.Input(radarInput);
         }
     }

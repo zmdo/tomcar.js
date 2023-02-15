@@ -5,6 +5,15 @@ import { DEFAULT_RADAR_INSTANCE } from "./tom/radar";
 import Tom from "./tom/tom";
 import GAWorkFlow from "./workflow";
 
+/**
+ * Get a new tomcar
+ * @param id car id
+ * @param locationX start point x coordinate
+ * @param locationY start point y coordinate
+ * @param velocityX the size of the starting velocity vector in the X direction
+ * @param velocityY the size of the starting velocity vector in the y direction
+ * @returns New Tomcar
+ */
 export default function GetTomCar(id:number,locationX:number,locationY:number,velocityX:number,velocityY:number) : {car:Fertari,driver:Tom,brain:TomBrain} {
 
     // init brain

@@ -47,7 +47,7 @@ export abstract class SensorBase implements Sensor {
 		let cos:number,sin:number ;
 		let dAngle = this.visualField / this.scanLine ;
 		let angle = direction - this.visualField/2 ;
-        for ( var index = 0 ; index < this.scanLine ;  index ++) {
+        for ( let index = 0 ; index < this.scanLine ;  index ++) {
 
 			sin = Math.sin(angle);
 			cos = Math.cos(angle);
