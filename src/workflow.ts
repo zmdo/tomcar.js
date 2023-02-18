@@ -117,7 +117,7 @@ export default class GAWorkFlow implements WorkFlow {
         for(let i:number = 0; i < width ; i++ ) {
             for(let j:number = 0; j < height ; j++ ) {
                 if(lands[j*width + i ] > 0) {
-                    c2d.fillRect(i,j,1,1);
+                    "fillRect" in c2d ? c2d.fillRect(i, j, 1, 1) : reportError("fillRect error");
                 }
             }
         }
